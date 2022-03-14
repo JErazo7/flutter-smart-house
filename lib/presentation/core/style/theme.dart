@@ -42,6 +42,7 @@ ThemeData lightTheme(BuildContext context) {
     ),
     textTheme: theme.textTheme.merge(_textTheme),
     colorScheme: const ColorScheme.light(
+      primary: AppColors.primary,
       secondary: AppColors.secondary,
     ),
   );

@@ -1,27 +1,112 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 import 'package:lottie/lottie.dart';
 
-class HomePage extends StatelessWidget {
+import '../../../application/routine/routine_watcher/routine_watcher_notifier.dart';
+import '../../../application/smart_item/smart_item_provider.dart';
+import '../../core/resources/resources.dart';
+
+class HomePage extends ConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final smartItemsState = ref.watch(smartItemProvider);
+    final routinesState = ref.watch(routineNotifierProvider);
+
+    // If exits an error, it returns an error page
+    if (smartItemsState is AsyncError || routinesState is Error) {
+      return HomeError(
+        onRetry: () {
+          _onRetry(ref);
+        },
+      );
+    }
+
+    // If the data is loaded, it returns a data page
+    if (smartItemsState is AsyncData && routinesState is Data) {
+      return const HomeData();
+    }
+
+    // it returns a loading page
+    return const HomeLoading();
+  }
+
+  void _onRetry(WidgetRef ref) {
+    ref.read(routineNotifierProvider.notifier).watchAllStarted();
+    ref.refresh(smartItemProvider);
+  }
+}
+
+class HomeError extends StatelessWidget {
+  final VoidCallback onRetry;
+
+  const HomeError({Key? key, required this.onRetry}) : super(key: key);
+
+  @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
 
-    // return Scaffold(
-    //   body: Center(
-    //     child: Lottie.asset(
-    //       'assets/animations/chip.json',
-    //       height: 180.h,
-    //       width: MediaQuery.of(context).size.width,
-    //     ),
-    //   ),
-    // );
+    return Scaffold(
+        body: SafeArea(
+      child: Column(
+        children: [
+          const Spacer(),
+          Lottie.asset(
+            LottieAnimations.loading,
+            height: 180.h,
+            width: MediaQuery.of(context).size.width,
+          ),
+          Text(
+            'Something went wrong',
+            style: theme.textTheme.subtitle1,
+          ),
+          const Spacer(flex: 2),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                fixedSize: Size(1.sw, 40.h),
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: onRetry,
+              child: const Text('Retry'),
+            ),
+          ),
+        ],
+      ),
+    ));
+  }
+}
 
+class HomeLoading extends StatelessWidget {
+  const HomeLoading({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Lottie.asset(
+          LottieAnimations.loading,
+          height: 180.h,
+          width: MediaQuery.of(context).size.width,
+        ),
+      ),
+    );
+  }
+}
+
+class HomeData extends StatelessWidget {
+  const HomeData({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
