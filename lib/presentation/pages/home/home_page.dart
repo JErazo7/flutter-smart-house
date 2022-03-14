@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 import 'package:lottie/lottie.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,6 +11,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+
     // return Scaffold(
     //   body: Center(
     //     child: Lottie.asset(
@@ -19,6 +21,7 @@ class HomePage extends StatelessWidget {
     //     ),
     //   ),
     // );
+
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -35,17 +38,35 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16.r),
                   child: SizedBox(
                     height: 150.h,
-                    child: Swiper(
-                      autoplay: true,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          color: Colors.amber[(index + 1) * 100]!,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Swiper.children(
+                          autoplay: true,
+                          autoplayDelay: 5000,
+                          scrollDirection: Axis.vertical,
+                          children: [
+                            WeatherWidget(
+                              value: '8°',
+                              city: 'Buenos Aires',
+                              description: 'Thunderstorm',
+                              type: WeatherType.thunder,
+                              height: constraints.maxHeight,
+                              width: constraints.maxWidth,
+                            ),
+                            WeatherWidget(
+                              value: '0°',
+                              city: 'New York',
+                              description: 'Snowing',
+                              type: WeatherType.heavySnow,
+                              height: constraints.maxHeight,
+                              width: constraints.maxWidth,
+                            )
+                          ],
+                          pagination: const SwiperPagination(
+                            builder: SwiperPagination.dots,
+                          ),
                         );
                       },
-                      itemCount: 3,
-                      pagination: const SwiperPagination(
-                          builder: SwiperPagination.dots),
                     ),
                   ),
                 ),
@@ -82,6 +103,72 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class WeatherWidget extends StatelessWidget {
+  final String city;
+  final String value;
+  final String description;
+  final double width;
+  final double height;
+  final WeatherType type;
+
+  const WeatherWidget({
+    Key? key,
+    required this.width,
+    required this.height,
+    required this.city,
+    required this.value,
+    required this.type,
+    required this.description,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Stack(
+      children: [
+        WeatherBg(
+          weatherType: type,
+          width: width,
+          height: height,
+        ),
+        Padding(
+          padding: EdgeInsets.all(16.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    city,
+                    style: theme.textTheme.subtitle1
+                        ?.copyWith(color: Colors.white),
+                  ),
+                  SizedBox(width: 6.w),
+                  Icon(
+                    Icons.near_me,
+                    color: Colors.white,
+                    size: 12.r,
+                  )
+                ],
+              ),
+              Text(
+                value,
+                style: theme.textTheme.headline3?.copyWith(color: Colors.white),
+              ),
+              const Spacer(),
+              Text(
+                description,
+                style: theme.textTheme.headline6?.copyWith(color: Colors.white),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

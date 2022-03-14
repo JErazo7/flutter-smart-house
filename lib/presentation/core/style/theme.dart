@@ -14,7 +14,7 @@ const _textTheme = TextTheme(
     fontWeight: FontWeight.w600,
   ),
   headline3: TextStyle(
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w400,
   ),
   headline4: TextStyle(
     fontWeight: FontWeight.w600,
