@@ -18,9 +18,7 @@ class MyApp extends StatelessWidget {
           return widget!;
         },
         title: 'Smart House',
-        darkTheme: darkTheme,
-        theme: lightTheme,
-        themeMode: ThemeMode.system,
+        theme: lightTheme(context),
         routeInformationParser: router.routeInformationParser,
         routerDelegate: router.routerDelegate,
         supportedLocales: AppLocalizations.supportedLocales,
