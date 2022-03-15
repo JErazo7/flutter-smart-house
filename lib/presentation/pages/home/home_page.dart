@@ -1,13 +1,19 @@
-import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../application/routine/routine_watcher/routine_watcher_notifier.dart';
 import '../../../application/smart_item/smart_item_provider.dart';
+import '../../../domain/routine/routine.dart';
+import '../../../domain/smart_item/smart_item.dart';
 import '../../core/resources/resources.dart';
+import '../../core/widgets/smart_house_button.dart';
+import 'widgets/carousel_section.dart';
+import 'widgets/devices_appbar.dart';
+import 'widgets/devices_list.dart';
+import 'widgets/routines_appbar.dart';
+import 'widgets/routines_list.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,7 +23,7 @@ class HomePage extends ConsumerWidget {
     final smartItemsState = ref.watch(smartItemProvider);
     final routinesState = ref.watch(routineNotifierProvider);
 
-    // If exits an error, it returns an error page
+    // If there is an error, it returns a error page
     if (smartItemsState is AsyncError || routinesState is Error) {
       return HomeError(
         onRetry: () {
@@ -26,18 +32,55 @@ class HomePage extends ConsumerWidget {
       );
     }
 
-    // If the data is loaded, it returns a data page
+    // If all the data is loaded, it returns a data page
     if (smartItemsState is AsyncData && routinesState is Data) {
-      return const HomeData();
+      return HomeData(
+        routines: routinesState.routines,
+        smartItems: smartItemsState.asData!.value,
+      );
     }
 
-    // it returns a loading page
     return const HomeLoading();
   }
 
   void _onRetry(WidgetRef ref) {
     ref.read(routineNotifierProvider.notifier).watchAllStarted();
     ref.refresh(smartItemProvider);
+  }
+}
+
+class HomeData extends StatelessWidget {
+  final List<Routine> routines;
+  final List<SmartItem> smartItems;
+
+  const HomeData({
+    Key? key,
+    required this.routines,
+    required this.smartItems,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            const SliverAppBar(
+              title: Text('Hi Josue'),
+            ),
+            const CarouselSection(),
+            const DevicesAppBar(),
+            DevicesList(smartItems),
+            const SliverPersistentHeader(
+              delegate: RoutineAppbar(),
+              pinned: true,
+              floating: true,
+            ),
+            RotuinesList(routines)
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -51,37 +94,31 @@ class HomeError extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-        body: SafeArea(
-      child: Column(
-        children: [
-          const Spacer(),
-          Lottie.asset(
-            LottieAnimations.loading,
-            height: 180.h,
-            width: MediaQuery.of(context).size.width,
-          ),
-          Text(
-            'Something went wrong',
-            style: theme.textTheme.subtitle1,
-          ),
-          const Spacer(flex: 2),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                fixedSize: Size(1.sw, 40.h),
-                textStyle: const TextStyle(fontSize: 20),
-              ),
-              onPressed: onRetry,
-              child: const Text('Retry'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const Spacer(),
+            Lottie.asset(
+              LottieAnimations.loading,
+              height: 180.h,
+              width: MediaQuery.of(context).size.width,
             ),
-          ),
-        ],
+            Text(
+              'Something went wrong',
+              style: theme.textTheme.subtitle1,
+            ),
+            const Spacer(flex: 2),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              child: SmartHouseButton(
+                text: 'Retry',
+                onPressed: onRetry,
+              ),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
 
@@ -96,322 +133,6 @@ class HomeLoading extends StatelessWidget {
           LottieAnimations.loading,
           height: 180.h,
           width: MediaQuery.of(context).size.width,
-        ),
-      ),
-    );
-  }
-}
-
-class HomeData extends StatelessWidget {
-  const HomeData({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            const SliverAppBar(
-              title: Text('Hi Josue'),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: PhysicalModel(
-                  color: Colors.transparent,
-                  clipBehavior: Clip.hardEdge,
-                  borderRadius: BorderRadius.circular(16.r),
-                  child: SizedBox(
-                    height: 150.h,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Swiper.children(
-                          autoplay: true,
-                          autoplayDelay: 5000,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            WeatherWidget(
-                              value: '8°',
-                              city: 'Buenos Aires',
-                              description: 'Thunderstorm',
-                              type: WeatherType.thunder,
-                              height: constraints.maxHeight,
-                              width: constraints.maxWidth,
-                            ),
-                            WeatherWidget(
-                              value: '0°',
-                              city: 'New York',
-                              description: 'Snowing',
-                              type: WeatherType.heavySnow,
-                              height: constraints.maxHeight,
-                              width: constraints.maxWidth,
-                            )
-                          ],
-                          pagination: const SwiperPagination(
-                            builder: SwiperPagination.dots,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const DevicesAppBar(),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 110.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemExtent: 164.w,
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-                  itemBuilder: (context, index) {
-                    return const DeviceItem();
-                  },
-                  itemCount: 5,
-                ),
-              ),
-            ),
-            const SliverPersistentHeader(
-              delegate: RoutineAppbar(),
-              pinned: true,
-              floating: true,
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return const RoutineWidget();
-                },
-                childCount: 16,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class WeatherWidget extends StatelessWidget {
-  final String city;
-  final String value;
-  final String description;
-  final double width;
-  final double height;
-  final WeatherType type;
-
-  const WeatherWidget({
-    Key? key,
-    required this.width,
-    required this.height,
-    required this.city,
-    required this.value,
-    required this.type,
-    required this.description,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Stack(
-      children: [
-        WeatherBg(
-          weatherType: type,
-          width: width,
-          height: height,
-        ),
-        Padding(
-          padding: EdgeInsets.all(16.r),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    city,
-                    style: theme.textTheme.subtitle1
-                        ?.copyWith(color: Colors.white),
-                  ),
-                  SizedBox(width: 6.w),
-                  Icon(
-                    Icons.near_me,
-                    color: Colors.white,
-                    size: 12.r,
-                  )
-                ],
-              ),
-              Text(
-                value,
-                style: theme.textTheme.headline3?.copyWith(color: Colors.white),
-              ),
-              const Spacer(),
-              Text(
-                description,
-                style: theme.textTheme.headline6?.copyWith(color: Colors.white),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class RoutineAppbar extends SliverPersistentHeaderDelegate {
-  const RoutineAppbar({Key? key}) : super();
-
-  @override
-  Widget build(BuildContext context, shrinkOffset, overlapsContent) {
-    final theme = Theme.of(context);
-    return Container(
-      color: theme.scaffoldBackgroundColor,
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w)
-          .subtract(EdgeInsets.only(bottom: 4.h)),
-      child: Text(
-        'Routines',
-        style: theme.textTheme.headline6,
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => 50.h;
-
-  @override
-  double get minExtent => 50.h;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
-  }
-}
-
-class RoutineWidget extends StatelessWidget {
-  const RoutineWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 16.w),
-      child: PhysicalModel(
-        color: theme.colorScheme.secondary,
-        elevation: 2.h,
-        shadowColor: theme.colorScheme.secondary,
-        borderRadius: BorderRadius.circular(16.r),
-        child: ListTile(
-          title: const Text('Turn on the lights'),
-          leading: CircleAvatar(
-            backgroundColor: theme.primaryColor,
-            radius: 18.r,
-            child: Icon(
-              Icons.light_outlined,
-              color: Colors.white,
-              size: 20.r,
-            ),
-          ),
-          trailing: Switch(
-            activeTrackColor: theme.primaryColor,
-            activeColor: Colors.white,
-            value: true,
-            onChanged: (_) {},
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DeviceItem extends StatelessWidget {
-  const DeviceItem({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
-      child: PhysicalModel(
-        color: theme.colorScheme.secondary,
-        elevation: 2.h,
-        shadowColor: theme.colorScheme.secondary,
-        borderRadius: BorderRadius.circular(16.r),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 16.h,
-            horizontal: 16.w,
-          ).subtract(EdgeInsets.only(top: 8.h)),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 4.h),
-                    child: Icon(
-                      Icons.light_outlined,
-                      size: 32.r,
-                    ),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 72.w,
-                    ),
-                    child: Text(
-                      'Lights',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: theme.textTheme.subtitle1,
-                    ),
-                  )
-                ],
-              ),
-              Switch(
-                activeTrackColor: theme.primaryColor,
-                activeColor: Colors.white,
-                value: true,
-                onChanged: (_) {},
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DevicesAppBar extends StatelessWidget {
-  const DevicesAppBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w)
-            .subtract(EdgeInsets.only(bottom: 8.h)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              'Devices',
-              style: textTheme.headline6,
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Text(
-                'See all',
-                style: textTheme.subtitle1?.copyWith(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-            )
-          ],
         ),
       ),
     );

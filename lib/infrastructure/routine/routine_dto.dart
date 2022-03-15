@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,9 +15,10 @@ class RoutineDto with _$RoutineDto {
     required String id,
     required String smartItemId,
     required String name,
-    required DateTime turnOnTime,
-    required DateTime turnOffTime,
+    @ServerTimestampConverter() required DateTime turnOnTime,
+    @ServerTimestampConverter() required DateTime turnOffTime,
     required String frequency,
+    required String state,
   }) = _RoutineDto;
 
   /// Create a [RoutineDto] object from a [routine]
@@ -28,6 +30,7 @@ class RoutineDto with _$RoutineDto {
       turnOnTime: routine.turnOnTime.toUtc(),
       turnOffTime: routine.turnOffTime.toUtc(),
       frequency: describeEnum(routine.frequency),
+      state: describeEnum(routine.state),
     );
   }
 
@@ -39,6 +42,10 @@ class RoutineDto with _$RoutineDto {
       name: name,
       turnOnTime: turnOnTime.toLocal(),
       turnOffTime: turnOffTime.toLocal(),
+      state: RoutineState.values.firstWhere(
+        (element) => describeEnum(element) == state,
+        orElse: () => RoutineState.disable,
+      ),
       frequency: RoutineFrequency.values.firstWhere(
         (element) => describeEnum(element) == frequency,
         orElse: () => RoutineFrequency.daily,
@@ -49,4 +56,17 @@ class RoutineDto with _$RoutineDto {
   /// Create a [RoutineDto] object from a json
   factory RoutineDto.fromJson(Map<String, dynamic> json) =>
       _$RoutineDtoFromJson(json);
+}
+
+/// A custom converter to timestamp objects
+class ServerTimestampConverter implements JsonConverter<DateTime, Timestamp> {
+  const ServerTimestampConverter();
+
+  @override
+  DateTime fromJson(Timestamp timestamp) {
+    return timestamp.toDate();
+  }
+
+  @override
+  Timestamp toJson(DateTime date) => Timestamp.fromDate(date);
 }

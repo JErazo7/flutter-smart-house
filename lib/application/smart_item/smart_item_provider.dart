@@ -11,3 +11,10 @@ final smartItemProvider = FutureProvider.autoDispose<List<SmartItem>>(
     return response.fold((f) => throw f, (smartItems) => smartItems);
   },
 );
+
+final deviceByIdProvider =
+    Provider.autoDispose.family<SmartItem, String>((ref, id) {
+  final smartItems = ref.watch(smartItemProvider).asData!.value;
+  final device = smartItems.firstWhere((element) => element.id == id);
+  return device;
+});

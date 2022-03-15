@@ -11,9 +11,12 @@ _$_RoutineDto _$$_RoutineDtoFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       smartItemId: json['smartItemId'] as String,
       name: json['name'] as String,
-      turnOnTime: DateTime.parse(json['turnOnTime'] as String),
-      turnOffTime: DateTime.parse(json['turnOffTime'] as String),
+      turnOnTime: const ServerTimestampConverter()
+          .fromJson(json['turnOnTime'] as Timestamp),
+      turnOffTime: const ServerTimestampConverter()
+          .fromJson(json['turnOffTime'] as Timestamp),
       frequency: json['frequency'] as String,
+      state: json['state'] as String,
     );
 
 Map<String, dynamic> _$$_RoutineDtoToJson(_$_RoutineDto instance) =>
@@ -21,7 +24,10 @@ Map<String, dynamic> _$$_RoutineDtoToJson(_$_RoutineDto instance) =>
       'id': instance.id,
       'smartItemId': instance.smartItemId,
       'name': instance.name,
-      'turnOnTime': instance.turnOnTime.toIso8601String(),
-      'turnOffTime': instance.turnOffTime.toIso8601String(),
+      'turnOnTime':
+          const ServerTimestampConverter().toJson(instance.turnOnTime),
+      'turnOffTime':
+          const ServerTimestampConverter().toJson(instance.turnOffTime),
       'frequency': instance.frequency,
+      'state': instance.state,
     };

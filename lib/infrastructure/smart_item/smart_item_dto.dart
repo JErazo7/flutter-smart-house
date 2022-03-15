@@ -15,7 +15,7 @@ class SmartItemDto with _$SmartItemDto {
     required String name,
     required String type,
     required String state,
-    String? icon,
+    int? iconId,
   }) = _SmartItemDto;
 
   /// Create a [SmartItemDto] object from a [SmartItem]
@@ -25,7 +25,7 @@ class SmartItemDto with _$SmartItemDto {
       name: smartItem.name,
       type: describeEnum(smartItem.type),
       state: describeEnum(smartItem.state),
-      icon: smartItem.icon,
+      iconId: smartItem.iconId,
     );
   }
 
@@ -39,9 +39,10 @@ class SmartItemDto with _$SmartItemDto {
         orElse: () => SmartItemType.device,
       ),
       state: SmartItemState.values.firstWhere(
-        (element) => describeEnum(element) == type,
+        (element) => describeEnum(element) == state,
         orElse: () => SmartItemState.off,
       ),
+      iconId: iconId,
     );
   }
 

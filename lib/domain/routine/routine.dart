@@ -22,7 +22,11 @@ class Routine with _$Routine {
     required DateTime turnOffTime,
 
     /// Frequency in which this routine is going to be executed
+    /// [daily, weekly, monthly]
     required RoutineFrequency frequency,
+
+    /// Routine State [disable, enable]
+    required RoutineState state,
   }) = _Routine;
 
   /// Create an empty object with the basic data of a [Routine]
@@ -34,9 +38,11 @@ class Routine with _$Routine {
       name: '',
       turnOnTime: time,
       turnOffTime: time.add(const Duration(minutes: 10)),
+      state: RoutineState.enable,
       frequency: RoutineFrequency.daily,
     );
   }
 }
 
 enum RoutineFrequency { daily, weekly, monthly }
+enum RoutineState { disable, enable }

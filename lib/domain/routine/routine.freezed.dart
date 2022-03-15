@@ -23,7 +23,8 @@ class _$RoutineTearOff {
       required String name,
       required DateTime turnOnTime,
       required DateTime turnOffTime,
-      required RoutineFrequency frequency}) {
+      required RoutineFrequency frequency,
+      required RoutineState state}) {
     return _Routine(
       id: id,
       smartItemId: smartItemId,
@@ -31,6 +32,7 @@ class _$RoutineTearOff {
       turnOnTime: turnOnTime,
       turnOffTime: turnOffTime,
       frequency: frequency,
+      state: state,
     );
   }
 }
@@ -56,7 +58,11 @@ mixin _$Routine {
   DateTime get turnOffTime => throw _privateConstructorUsedError;
 
   /// Frequency in which this routine is going to be executed
+  /// [daily, weekly, monthly]
   RoutineFrequency get frequency => throw _privateConstructorUsedError;
+
+  /// Routine State [disable, enable]
+  RoutineState get state => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RoutineCopyWith<Routine> get copyWith => throw _privateConstructorUsedError;
@@ -72,7 +78,8 @@ abstract class $RoutineCopyWith<$Res> {
       String name,
       DateTime turnOnTime,
       DateTime turnOffTime,
-      RoutineFrequency frequency});
+      RoutineFrequency frequency,
+      RoutineState state});
 }
 
 /// @nodoc
@@ -91,6 +98,7 @@ class _$RoutineCopyWithImpl<$Res> implements $RoutineCopyWith<$Res> {
     Object? turnOnTime = freezed,
     Object? turnOffTime = freezed,
     Object? frequency = freezed,
+    Object? state = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -117,6 +125,10 @@ class _$RoutineCopyWithImpl<$Res> implements $RoutineCopyWith<$Res> {
           ? _value.frequency
           : frequency // ignore: cast_nullable_to_non_nullable
               as RoutineFrequency,
+      state: state == freezed
+          ? _value.state
+          : state // ignore: cast_nullable_to_non_nullable
+              as RoutineState,
     ));
   }
 }
@@ -132,7 +144,8 @@ abstract class _$RoutineCopyWith<$Res> implements $RoutineCopyWith<$Res> {
       String name,
       DateTime turnOnTime,
       DateTime turnOffTime,
-      RoutineFrequency frequency});
+      RoutineFrequency frequency,
+      RoutineState state});
 }
 
 /// @nodoc
@@ -152,6 +165,7 @@ class __$RoutineCopyWithImpl<$Res> extends _$RoutineCopyWithImpl<$Res>
     Object? turnOnTime = freezed,
     Object? turnOffTime = freezed,
     Object? frequency = freezed,
+    Object? state = freezed,
   }) {
     return _then(_Routine(
       id: id == freezed
@@ -178,6 +192,10 @@ class __$RoutineCopyWithImpl<$Res> extends _$RoutineCopyWithImpl<$Res>
           ? _value.frequency
           : frequency // ignore: cast_nullable_to_non_nullable
               as RoutineFrequency,
+      state: state == freezed
+          ? _value.state
+          : state // ignore: cast_nullable_to_non_nullable
+              as RoutineState,
     ));
   }
 }
@@ -191,7 +209,8 @@ class _$_Routine implements _Routine {
       required this.name,
       required this.turnOnTime,
       required this.turnOffTime,
-      required this.frequency});
+      required this.frequency,
+      required this.state});
 
   @override
 
@@ -216,11 +235,16 @@ class _$_Routine implements _Routine {
   @override
 
   /// Frequency in which this routine is going to be executed
+  /// [daily, weekly, monthly]
   final RoutineFrequency frequency;
+  @override
+
+  /// Routine State [disable, enable]
+  final RoutineState state;
 
   @override
   String toString() {
-    return 'Routine(id: $id, smartItemId: $smartItemId, name: $name, turnOnTime: $turnOnTime, turnOffTime: $turnOffTime, frequency: $frequency)';
+    return 'Routine(id: $id, smartItemId: $smartItemId, name: $name, turnOnTime: $turnOnTime, turnOffTime: $turnOffTime, frequency: $frequency, state: $state)';
   }
 
   @override
@@ -236,7 +260,8 @@ class _$_Routine implements _Routine {
                 .equals(other.turnOnTime, turnOnTime) &&
             const DeepCollectionEquality()
                 .equals(other.turnOffTime, turnOffTime) &&
-            const DeepCollectionEquality().equals(other.frequency, frequency));
+            const DeepCollectionEquality().equals(other.frequency, frequency) &&
+            const DeepCollectionEquality().equals(other.state, state));
   }
 
   @override
@@ -247,7 +272,8 @@ class _$_Routine implements _Routine {
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(turnOnTime),
       const DeepCollectionEquality().hash(turnOffTime),
-      const DeepCollectionEquality().hash(frequency));
+      const DeepCollectionEquality().hash(frequency),
+      const DeepCollectionEquality().hash(state));
 
   @JsonKey(ignore: true)
   @override
@@ -262,7 +288,8 @@ abstract class _Routine implements Routine {
       required String name,
       required DateTime turnOnTime,
       required DateTime turnOffTime,
-      required RoutineFrequency frequency}) = _$_Routine;
+      required RoutineFrequency frequency,
+      required RoutineState state}) = _$_Routine;
 
   @override
 
@@ -287,7 +314,12 @@ abstract class _Routine implements Routine {
   @override
 
   /// Frequency in which this routine is going to be executed
+  /// [daily, weekly, monthly]
   RoutineFrequency get frequency;
+  @override
+
+  /// Routine State [disable, enable]
+  RoutineState get state;
   @override
   @JsonKey(ignore: true)
   _$RoutineCopyWith<_Routine> get copyWith =>

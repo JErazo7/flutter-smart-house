@@ -12,7 +12,7 @@ _$_SmartItemDto _$$_SmartItemDtoFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       type: json['type'] as String,
       state: json['state'] as String,
-      icon: json['icon'] as String?,
+      iconId: json['iconId'] as int?,
     );
 
 Map<String, dynamic> _$$_SmartItemDtoToJson(_$_SmartItemDto instance) =>
@@ -21,5 +21,5 @@ Map<String, dynamic> _$$_SmartItemDtoToJson(_$_SmartItemDto instance) =>
       'name': instance.name,
       'type': instance.type,
       'state': instance.state,
-      'icon': instance.icon,
+      'iconId': instance.iconId,
     };

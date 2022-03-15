@@ -22,13 +22,13 @@ class _$SmartItemTearOff {
       required String name,
       required SmartItemType type,
       required SmartItemState state,
-      String? icon}) {
+      int? iconId}) {
     return _SmartItem(
       id: id,
       name: name,
       type: type,
       state: state,
-      icon: icon,
+      iconId: iconId,
     );
   }
 }
@@ -51,7 +51,7 @@ mixin _$SmartItem {
   SmartItemState get state => throw _privateConstructorUsedError;
 
   /// Icon to indentify the SmartItem
-  String? get icon => throw _privateConstructorUsedError;
+  int? get iconId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SmartItemCopyWith<SmartItem> get copyWith =>
@@ -67,7 +67,7 @@ abstract class $SmartItemCopyWith<$Res> {
       String name,
       SmartItemType type,
       SmartItemState state,
-      String? icon});
+      int? iconId});
 }
 
 /// @nodoc
@@ -84,7 +84,7 @@ class _$SmartItemCopyWithImpl<$Res> implements $SmartItemCopyWith<$Res> {
     Object? name = freezed,
     Object? type = freezed,
     Object? state = freezed,
-    Object? icon = freezed,
+    Object? iconId = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -103,10 +103,10 @@ class _$SmartItemCopyWithImpl<$Res> implements $SmartItemCopyWith<$Res> {
           ? _value.state
           : state // ignore: cast_nullable_to_non_nullable
               as SmartItemState,
-      icon: icon == freezed
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String?,
+      iconId: iconId == freezed
+          ? _value.iconId
+          : iconId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -122,7 +122,7 @@ abstract class _$SmartItemCopyWith<$Res> implements $SmartItemCopyWith<$Res> {
       String name,
       SmartItemType type,
       SmartItemState state,
-      String? icon});
+      int? iconId});
 }
 
 /// @nodoc
@@ -140,7 +140,7 @@ class __$SmartItemCopyWithImpl<$Res> extends _$SmartItemCopyWithImpl<$Res>
     Object? name = freezed,
     Object? type = freezed,
     Object? state = freezed,
-    Object? icon = freezed,
+    Object? iconId = freezed,
   }) {
     return _then(_SmartItem(
       id: id == freezed
@@ -159,10 +159,10 @@ class __$SmartItemCopyWithImpl<$Res> extends _$SmartItemCopyWithImpl<$Res>
           ? _value.state
           : state // ignore: cast_nullable_to_non_nullable
               as SmartItemState,
-      icon: icon == freezed
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String?,
+      iconId: iconId == freezed
+          ? _value.iconId
+          : iconId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -175,7 +175,7 @@ class _$_SmartItem implements _SmartItem {
       required this.name,
       required this.type,
       required this.state,
-      this.icon});
+      this.iconId});
 
   @override
 
@@ -196,11 +196,11 @@ class _$_SmartItem implements _SmartItem {
   @override
 
   /// Icon to indentify the SmartItem
-  final String? icon;
+  final int? iconId;
 
   @override
   String toString() {
-    return 'SmartItem(id: $id, name: $name, type: $type, state: $state, icon: $icon)';
+    return 'SmartItem(id: $id, name: $name, type: $type, state: $state, iconId: $iconId)';
   }
 
   @override
@@ -212,7 +212,7 @@ class _$_SmartItem implements _SmartItem {
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.type, type) &&
             const DeepCollectionEquality().equals(other.state, state) &&
-            const DeepCollectionEquality().equals(other.icon, icon));
+            const DeepCollectionEquality().equals(other.iconId, iconId));
   }
 
   @override
@@ -222,7 +222,7 @@ class _$_SmartItem implements _SmartItem {
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(type),
       const DeepCollectionEquality().hash(state),
-      const DeepCollectionEquality().hash(icon));
+      const DeepCollectionEquality().hash(iconId));
 
   @JsonKey(ignore: true)
   @override
@@ -236,7 +236,7 @@ abstract class _SmartItem implements SmartItem {
       required String name,
       required SmartItemType type,
       required SmartItemState state,
-      String? icon}) = _$_SmartItem;
+      int? iconId}) = _$_SmartItem;
 
   @override
 
@@ -257,7 +257,7 @@ abstract class _SmartItem implements SmartItem {
   @override
 
   /// Icon to indentify the SmartItem
-  String? get icon;
+  int? get iconId;
   @override
   @JsonKey(ignore: true)
   _$SmartItemCopyWith<_SmartItem> get copyWith =>

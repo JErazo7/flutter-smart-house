@@ -25,9 +25,10 @@ class _$RoutineDtoTearOff {
       {required String id,
       required String smartItemId,
       required String name,
-      required DateTime turnOnTime,
-      required DateTime turnOffTime,
-      required String frequency}) {
+      @ServerTimestampConverter() required DateTime turnOnTime,
+      @ServerTimestampConverter() required DateTime turnOffTime,
+      required String frequency,
+      required String state}) {
     return _RoutineDto(
       id: id,
       smartItemId: smartItemId,
@@ -35,6 +36,7 @@ class _$RoutineDtoTearOff {
       turnOnTime: turnOnTime,
       turnOffTime: turnOffTime,
       frequency: frequency,
+      state: state,
     );
   }
 
@@ -51,9 +53,12 @@ mixin _$RoutineDto {
   String get id => throw _privateConstructorUsedError;
   String get smartItemId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  @ServerTimestampConverter()
   DateTime get turnOnTime => throw _privateConstructorUsedError;
+  @ServerTimestampConverter()
   DateTime get turnOffTime => throw _privateConstructorUsedError;
   String get frequency => throw _privateConstructorUsedError;
+  String get state => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -70,9 +75,10 @@ abstract class $RoutineDtoCopyWith<$Res> {
       {String id,
       String smartItemId,
       String name,
-      DateTime turnOnTime,
-      DateTime turnOffTime,
-      String frequency});
+      @ServerTimestampConverter() DateTime turnOnTime,
+      @ServerTimestampConverter() DateTime turnOffTime,
+      String frequency,
+      String state});
 }
 
 /// @nodoc
@@ -91,6 +97,7 @@ class _$RoutineDtoCopyWithImpl<$Res> implements $RoutineDtoCopyWith<$Res> {
     Object? turnOnTime = freezed,
     Object? turnOffTime = freezed,
     Object? frequency = freezed,
+    Object? state = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -117,6 +124,10 @@ class _$RoutineDtoCopyWithImpl<$Res> implements $RoutineDtoCopyWith<$Res> {
           ? _value.frequency
           : frequency // ignore: cast_nullable_to_non_nullable
               as String,
+      state: state == freezed
+          ? _value.state
+          : state // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -131,9 +142,10 @@ abstract class _$RoutineDtoCopyWith<$Res> implements $RoutineDtoCopyWith<$Res> {
       {String id,
       String smartItemId,
       String name,
-      DateTime turnOnTime,
-      DateTime turnOffTime,
-      String frequency});
+      @ServerTimestampConverter() DateTime turnOnTime,
+      @ServerTimestampConverter() DateTime turnOffTime,
+      String frequency,
+      String state});
 }
 
 /// @nodoc
@@ -154,6 +166,7 @@ class __$RoutineDtoCopyWithImpl<$Res> extends _$RoutineDtoCopyWithImpl<$Res>
     Object? turnOnTime = freezed,
     Object? turnOffTime = freezed,
     Object? frequency = freezed,
+    Object? state = freezed,
   }) {
     return _then(_RoutineDto(
       id: id == freezed
@@ -180,6 +193,10 @@ class __$RoutineDtoCopyWithImpl<$Res> extends _$RoutineDtoCopyWithImpl<$Res>
           ? _value.frequency
           : frequency // ignore: cast_nullable_to_non_nullable
               as String,
+      state: state == freezed
+          ? _value.state
+          : state // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -191,9 +208,10 @@ class _$_RoutineDto extends _RoutineDto with DiagnosticableTreeMixin {
       {required this.id,
       required this.smartItemId,
       required this.name,
-      required this.turnOnTime,
-      required this.turnOffTime,
-      required this.frequency})
+      @ServerTimestampConverter() required this.turnOnTime,
+      @ServerTimestampConverter() required this.turnOffTime,
+      required this.frequency,
+      required this.state})
       : super._();
 
   factory _$_RoutineDto.fromJson(Map<String, dynamic> json) =>
@@ -206,15 +224,19 @@ class _$_RoutineDto extends _RoutineDto with DiagnosticableTreeMixin {
   @override
   final String name;
   @override
+  @ServerTimestampConverter()
   final DateTime turnOnTime;
   @override
+  @ServerTimestampConverter()
   final DateTime turnOffTime;
   @override
   final String frequency;
+  @override
+  final String state;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'RoutineDto(id: $id, smartItemId: $smartItemId, name: $name, turnOnTime: $turnOnTime, turnOffTime: $turnOffTime, frequency: $frequency)';
+    return 'RoutineDto(id: $id, smartItemId: $smartItemId, name: $name, turnOnTime: $turnOnTime, turnOffTime: $turnOffTime, frequency: $frequency, state: $state)';
   }
 
   @override
@@ -227,7 +249,8 @@ class _$_RoutineDto extends _RoutineDto with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('turnOnTime', turnOnTime))
       ..add(DiagnosticsProperty('turnOffTime', turnOffTime))
-      ..add(DiagnosticsProperty('frequency', frequency));
+      ..add(DiagnosticsProperty('frequency', frequency))
+      ..add(DiagnosticsProperty('state', state));
   }
 
   @override
@@ -243,7 +266,8 @@ class _$_RoutineDto extends _RoutineDto with DiagnosticableTreeMixin {
                 .equals(other.turnOnTime, turnOnTime) &&
             const DeepCollectionEquality()
                 .equals(other.turnOffTime, turnOffTime) &&
-            const DeepCollectionEquality().equals(other.frequency, frequency));
+            const DeepCollectionEquality().equals(other.frequency, frequency) &&
+            const DeepCollectionEquality().equals(other.state, state));
   }
 
   @override
@@ -254,7 +278,8 @@ class _$_RoutineDto extends _RoutineDto with DiagnosticableTreeMixin {
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(turnOnTime),
       const DeepCollectionEquality().hash(turnOffTime),
-      const DeepCollectionEquality().hash(frequency));
+      const DeepCollectionEquality().hash(frequency),
+      const DeepCollectionEquality().hash(state));
 
   @JsonKey(ignore: true)
   @override
@@ -272,9 +297,10 @@ abstract class _RoutineDto extends RoutineDto {
       {required String id,
       required String smartItemId,
       required String name,
-      required DateTime turnOnTime,
-      required DateTime turnOffTime,
-      required String frequency}) = _$_RoutineDto;
+      @ServerTimestampConverter() required DateTime turnOnTime,
+      @ServerTimestampConverter() required DateTime turnOffTime,
+      required String frequency,
+      required String state}) = _$_RoutineDto;
   _RoutineDto._() : super._();
 
   factory _RoutineDto.fromJson(Map<String, dynamic> json) =
@@ -287,11 +313,15 @@ abstract class _RoutineDto extends RoutineDto {
   @override
   String get name;
   @override
+  @ServerTimestampConverter()
   DateTime get turnOnTime;
   @override
+  @ServerTimestampConverter()
   DateTime get turnOffTime;
   @override
   String get frequency;
+  @override
+  String get state;
   @override
   @JsonKey(ignore: true)
   _$RoutineDtoCopyWith<_RoutineDto> get copyWith =>

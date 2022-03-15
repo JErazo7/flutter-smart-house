@@ -26,13 +26,13 @@ class _$SmartItemDtoTearOff {
       required String name,
       required String type,
       required String state,
-      String? icon}) {
+      int? iconId}) {
     return _SmartItemDto(
       id: id,
       name: name,
       type: type,
       state: state,
-      icon: icon,
+      iconId: iconId,
     );
   }
 
@@ -50,7 +50,7 @@ mixin _$SmartItemDto {
   String get name => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
   String get state => throw _privateConstructorUsedError;
-  String? get icon => throw _privateConstructorUsedError;
+  int? get iconId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -63,7 +63,7 @@ abstract class $SmartItemDtoCopyWith<$Res> {
   factory $SmartItemDtoCopyWith(
           SmartItemDto value, $Res Function(SmartItemDto) then) =
       _$SmartItemDtoCopyWithImpl<$Res>;
-  $Res call({String id, String name, String type, String state, String? icon});
+  $Res call({String id, String name, String type, String state, int? iconId});
 }
 
 /// @nodoc
@@ -80,7 +80,7 @@ class _$SmartItemDtoCopyWithImpl<$Res> implements $SmartItemDtoCopyWith<$Res> {
     Object? name = freezed,
     Object? type = freezed,
     Object? state = freezed,
-    Object? icon = freezed,
+    Object? iconId = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -99,10 +99,10 @@ class _$SmartItemDtoCopyWithImpl<$Res> implements $SmartItemDtoCopyWith<$Res> {
           ? _value.state
           : state // ignore: cast_nullable_to_non_nullable
               as String,
-      icon: icon == freezed
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String?,
+      iconId: iconId == freezed
+          ? _value.iconId
+          : iconId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -114,7 +114,7 @@ abstract class _$SmartItemDtoCopyWith<$Res>
           _SmartItemDto value, $Res Function(_SmartItemDto) then) =
       __$SmartItemDtoCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String name, String type, String state, String? icon});
+  $Res call({String id, String name, String type, String state, int? iconId});
 }
 
 /// @nodoc
@@ -133,7 +133,7 @@ class __$SmartItemDtoCopyWithImpl<$Res> extends _$SmartItemDtoCopyWithImpl<$Res>
     Object? name = freezed,
     Object? type = freezed,
     Object? state = freezed,
-    Object? icon = freezed,
+    Object? iconId = freezed,
   }) {
     return _then(_SmartItemDto(
       id: id == freezed
@@ -152,10 +152,10 @@ class __$SmartItemDtoCopyWithImpl<$Res> extends _$SmartItemDtoCopyWithImpl<$Res>
           ? _value.state
           : state // ignore: cast_nullable_to_non_nullable
               as String,
-      icon: icon == freezed
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String?,
+      iconId: iconId == freezed
+          ? _value.iconId
+          : iconId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -168,7 +168,7 @@ class _$_SmartItemDto extends _SmartItemDto with DiagnosticableTreeMixin {
       required this.name,
       required this.type,
       required this.state,
-      this.icon})
+      this.iconId})
       : super._();
 
   factory _$_SmartItemDto.fromJson(Map<String, dynamic> json) =>
@@ -183,11 +183,11 @@ class _$_SmartItemDto extends _SmartItemDto with DiagnosticableTreeMixin {
   @override
   final String state;
   @override
-  final String? icon;
+  final int? iconId;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SmartItemDto(id: $id, name: $name, type: $type, state: $state, icon: $icon)';
+    return 'SmartItemDto(id: $id, name: $name, type: $type, state: $state, iconId: $iconId)';
   }
 
   @override
@@ -199,7 +199,7 @@ class _$_SmartItemDto extends _SmartItemDto with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('type', type))
       ..add(DiagnosticsProperty('state', state))
-      ..add(DiagnosticsProperty('icon', icon));
+      ..add(DiagnosticsProperty('iconId', iconId));
   }
 
   @override
@@ -211,7 +211,7 @@ class _$_SmartItemDto extends _SmartItemDto with DiagnosticableTreeMixin {
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.type, type) &&
             const DeepCollectionEquality().equals(other.state, state) &&
-            const DeepCollectionEquality().equals(other.icon, icon));
+            const DeepCollectionEquality().equals(other.iconId, iconId));
   }
 
   @override
@@ -221,7 +221,7 @@ class _$_SmartItemDto extends _SmartItemDto with DiagnosticableTreeMixin {
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(type),
       const DeepCollectionEquality().hash(state),
-      const DeepCollectionEquality().hash(icon));
+      const DeepCollectionEquality().hash(iconId));
 
   @JsonKey(ignore: true)
   @override
@@ -240,7 +240,7 @@ abstract class _SmartItemDto extends SmartItemDto {
       required String name,
       required String type,
       required String state,
-      String? icon}) = _$_SmartItemDto;
+      int? iconId}) = _$_SmartItemDto;
   _SmartItemDto._() : super._();
 
   factory _SmartItemDto.fromJson(Map<String, dynamic> json) =
@@ -255,7 +255,7 @@ abstract class _SmartItemDto extends SmartItemDto {
   @override
   String get state;
   @override
-  String? get icon;
+  int? get iconId;
   @override
   @JsonKey(ignore: true)
   _$SmartItemDtoCopyWith<_SmartItemDto> get copyWith =>
