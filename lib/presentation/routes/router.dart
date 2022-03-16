@@ -9,13 +9,14 @@ final router = GoRouter(
   routes: <GoRoute>[
     GoRoute(
       path: '/',
-      // name: RouteName.home,
+      name: RouteName.home,
       builder: (context, state) => const HomePage(),
     ),
     GoRoute(
-      path: '/routine',
-      // name: RouteName.routineForm,
-      builder: (context, state) => RoutineFormPage(),
+      path: '/routine_form',
+      name: RouteName.routineForm,
+      builder: (context, state) =>
+          RoutineFormPage(routine: state.extra as Routine?),
     ),
   ],
 );

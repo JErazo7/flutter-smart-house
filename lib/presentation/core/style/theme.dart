@@ -16,6 +16,7 @@ ThemeData lightTheme(BuildContext context) {
       centerTitle: false,
       elevation: 0,
       titleSpacing: 16.r,
+      iconTheme: theme.iconTheme.copyWith(color: AppColors.title),
       titleTextStyle: theme.textTheme.headline5
           ?.copyWith(fontWeight: FontWeight.w600, fontSize: 24.sp),
     ),
