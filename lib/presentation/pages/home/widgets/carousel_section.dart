@@ -10,13 +10,13 @@ class CarouselSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.r),
         child: PhysicalModel(
           color: Colors.transparent,
           clipBehavior: Clip.hardEdge,
           borderRadius: BorderRadius.circular(16.r),
           child: SizedBox(
-            height: 150.h,
+            height: 170.r,
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return Swiper.children(

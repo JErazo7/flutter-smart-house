@@ -7,7 +7,6 @@ final smartItemProvider = FutureProvider.autoDispose<List<SmartItem>>(
   (ref) async {
     final repository = ref.watch(smartItemRepositoryProvider);
     final response = await repository.fetchAll();
-    await Future.delayed(const Duration(seconds: 2));
     return response.fold((f) => throw f, (smartItems) => smartItems);
   },
 );

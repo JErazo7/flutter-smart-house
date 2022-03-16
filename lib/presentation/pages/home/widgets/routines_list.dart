@@ -43,21 +43,22 @@ class RoutineItem extends StatelessWidget {
       fontFamily: 'MaterialIcons',
     );
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 16.w),
+      padding: EdgeInsets.symmetric(vertical: 6.r, horizontal: 16.r),
       child: PhysicalModel(
         color: theme.colorScheme.secondary,
-        elevation: 2.h,
+        elevation: 2.r,
         shadowColor: theme.colorScheme.secondary,
         borderRadius: BorderRadius.circular(16.r),
         child: ListTile(
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 2.h),
           title: Text(routine.name),
           leading: CircleAvatar(
             backgroundColor: theme.primaryColor,
-            radius: 18.r,
+            radius: 16.r,
             child: Icon(
               iconData,
               color: Colors.white,
-              size: 20.r,
+              size: 16.r,
             ),
           ),
           trailing: Switch(

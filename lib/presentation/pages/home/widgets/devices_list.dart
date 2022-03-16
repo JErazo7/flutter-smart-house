@@ -12,11 +12,11 @@ class DevicesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
-        height: 110.h,
+        height: 120.h,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemExtent: 164.w,
-          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+          itemExtent: 170.r,
+          padding: EdgeInsets.all(8.r),
           itemBuilder: (context, index) {
             final device = devices[index];
             return DeviceItem(device);
@@ -41,18 +41,16 @@ class DeviceItem extends StatelessWidget {
       fontFamily: 'MaterialIcons',
     );
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
+    return Container(
+      // width: 160.w,
+      padding: EdgeInsets.symmetric(horizontal: 8.r),
       child: PhysicalModel(
         color: theme.colorScheme.secondary,
         elevation: 2.h,
         shadowColor: theme.colorScheme.secondary,
         borderRadius: BorderRadius.circular(16.r),
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 16.h,
-            horizontal: 16.w,
-          ).subtract(EdgeInsets.only(top: 8.h)),
+          padding: EdgeInsets.all(16.r).subtract(EdgeInsets.only(top: 8.r)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,7 +64,7 @@ class DeviceItem extends StatelessWidget {
                       padding: EdgeInsets.only(top: 4.h),
                       child: Icon(
                         iconData,
-                        size: 32.r,
+                        size: 30.r,
                       ),
                     ),
                     Text(

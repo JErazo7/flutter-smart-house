@@ -9,8 +9,7 @@ class RoutineAppbar extends SliverPersistentHeaderDelegate {
     final theme = Theme.of(context);
     return Container(
       color: theme.scaffoldBackgroundColor,
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w)
-          .subtract(EdgeInsets.only(bottom: 4.h)),
+      padding: EdgeInsets.all(16.r).subtract(EdgeInsets.only(bottom: 4.h)),
       child: Text(
         'Routines',
         style: theme.textTheme.headline6,
@@ -19,10 +18,10 @@ class RoutineAppbar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 50.h;
+  double get maxExtent => 50.r;
 
   @override
-  double get minExtent => 50.h;
+  double get minExtent => 50.r;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {

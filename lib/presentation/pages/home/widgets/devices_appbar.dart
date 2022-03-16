@@ -9,8 +9,7 @@ class DevicesAppBar extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w)
-            .subtract(EdgeInsets.only(bottom: 8.h)),
+        padding: EdgeInsets.all(16.r).subtract(EdgeInsets.only(bottom: 8.r)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,

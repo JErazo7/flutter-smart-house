@@ -23,10 +23,13 @@ class SmartHouseButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.r),
         ),
         fixedSize: Size(width ?? 1.sw, height ?? 40.h),
-        textStyle: const TextStyle(fontSize: 20),
+        textStyle:
+            Theme.of(context).textTheme.subtitle1?.apply(fontSizeFactor: 1.1),
       ),
       onPressed: onPressed,
-      child: Text(text),
+      child: Text(
+        text,
+      ),
     );
   }
 }

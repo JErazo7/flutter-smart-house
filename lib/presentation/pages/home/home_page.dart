@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../application/routine/routine_watcher/routine_watcher_notifier.dart';
@@ -9,6 +10,7 @@ import '../../../domain/routine/routine.dart';
 import '../../../domain/smart_item/smart_item.dart';
 import '../../core/resources/resources.dart';
 import '../../core/widgets/smart_house_button.dart';
+import '../../routes/route_name.dart';
 import 'widgets/carousel_section.dart';
 import 'widgets/devices_appbar.dart';
 import 'widgets/devices_list.dart';
@@ -78,6 +80,17 @@ class HomeData extends StatelessWidget {
             ),
             RotuinesList(routines)
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: EdgeInsets.all(16.r),
+          child: SmartHouseButton(
+            text: 'Create Routine',
+            onPressed: () {
+              context.go('/routine');
+            },
+          ),
         ),
       ),
     );
