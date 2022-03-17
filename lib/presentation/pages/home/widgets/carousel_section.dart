@@ -78,10 +78,13 @@ class WeatherWidget extends StatelessWidget {
 
     return Stack(
       children: [
-        WeatherBg(
-          weatherType: type,
-          width: width,
-          height: height,
+        // WeatherBg(
+        //   weatherType: type,
+        //   width: width,
+        //   height: height,
+        // ),
+        Container(
+          color: Colors.black,
         ),
         Padding(
           padding: EdgeInsets.all(16.r),
