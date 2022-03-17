@@ -1,4 +1,4 @@
-part of 'routine_form_notifier.dart';
+part of 'routine_form_controller.dart';
 
 @freezed
 class RoutineFormState with _$RoutineFormState {

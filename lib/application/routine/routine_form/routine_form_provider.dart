@@ -1,9 +1,9 @@
-part of 'routine_form_notifier.dart';
+part of 'routine_form_controller.dart';
 
-final routineNotifierProvider = StateNotifierProvider.family
-    .autoDispose<RoutineFormNotifier, RoutineFormState, Routine?>(
+final routineFormControllerProvider = StateNotifierProvider.autoDispose
+    .family<RoutineFormController, RoutineFormState, Routine?>(
   (ref, routine) {
     final repository = ref.watch(routineRepositoryProvider);
-    return RoutineFormNotifier(repository, routine: routine);
+    return RoutineFormController(repository, routine);
   },
 );

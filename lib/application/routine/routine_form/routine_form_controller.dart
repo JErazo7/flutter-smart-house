@@ -9,13 +9,13 @@ import '../../../infrastructure/routine/routine_repository.dart';
 
 part 'routine_form_state.dart';
 part 'routine_form_provider.dart';
-part 'routine_form_notifier.freezed.dart';
+part 'routine_form_controller.freezed.dart';
 
-class RoutineFormNotifier extends StateNotifier<RoutineFormState> {
+class RoutineFormController extends StateNotifier<RoutineFormState> {
   final IRoutineRepository _repository;
   final Routine? routine;
 
-  RoutineFormNotifier(this._repository, {this.routine})
+  RoutineFormController(this._repository, this.routine)
       : super(RoutineFormState.initial(routine));
 
   void nameUpdated(String name) {

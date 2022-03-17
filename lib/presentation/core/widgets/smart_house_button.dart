@@ -5,12 +5,14 @@ class SmartHouseButton extends StatelessWidget {
   final double? height;
   final VoidCallback? onPressed;
   final String text;
+  final bool enable;
 
   const SmartHouseButton({
     Key? key,
     this.width,
     this.height,
     this.onPressed,
+    this.enable = true,
     required this.text,
   }) : super(key: key);
 
@@ -25,7 +27,7 @@ class SmartHouseButton extends StatelessWidget {
             Size(width ?? MediaQuery.of(context).size.width, height ?? 64),
         textStyle: Theme.of(context).textTheme.headline6,
       ),
-      onPressed: onPressed,
+      onPressed: onPressed ?? (enable ? () {} : null),
       child: Text(
         text,
       ),
