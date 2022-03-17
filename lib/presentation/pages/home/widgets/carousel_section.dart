@@ -1,6 +1,5 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
 
 class CarouselSection extends StatelessWidget {
@@ -10,13 +9,13 @@ class CarouselSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.r),
+        padding: const EdgeInsets.all(16),
         child: PhysicalModel(
           color: Colors.transparent,
           clipBehavior: Clip.hardEdge,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(16),
           child: SizedBox(
-            height: 170.r,
+            height: 200,
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return Swiper.children(
@@ -87,7 +86,7 @@ class WeatherWidget extends StatelessWidget {
           color: Colors.black,
         ),
         Padding(
-          padding: EdgeInsets.all(16.r),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -95,25 +94,25 @@ class WeatherWidget extends StatelessWidget {
                 children: [
                   Text(
                     city,
-                    style: theme.textTheme.subtitle1
+                    style: theme.textTheme.headline6
                         ?.copyWith(color: Colors.white),
                   ),
-                  SizedBox(width: 6.w),
-                  Icon(
+                  const SizedBox(width: 6),
+                  const Icon(
                     Icons.near_me,
                     color: Colors.white,
-                    size: 12.r,
+                    size: 14,
                   )
                 ],
               ),
               Text(
                 value,
-                style: theme.textTheme.headline3?.copyWith(color: Colors.white),
+                style: theme.textTheme.headline2?.copyWith(color: Colors.white),
               ),
               const Spacer(),
               Text(
                 description,
-                style: theme.textTheme.headline6?.copyWith(color: Colors.white),
+                style: theme.textTheme.headline5?.copyWith(color: Colors.white),
               ),
             ],
           ),

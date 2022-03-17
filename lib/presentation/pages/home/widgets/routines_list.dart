@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../application/smart_item/smart_item_provider.dart';
 import '../../../../domain/routine/routine.dart';
@@ -43,22 +42,27 @@ class RoutineItem extends StatelessWidget {
       fontFamily: 'MaterialIcons',
     );
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.r, horizontal: 16.r),
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       child: PhysicalModel(
         color: theme.colorScheme.secondary,
-        elevation: 2.r,
+        elevation: 2,
         shadowColor: theme.colorScheme.secondary,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(16),
         child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 2.h),
-          title: Text(routine.name),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          title: Text(
+            routine.name,
+            style: theme.textTheme.headline6
+                ?.copyWith(fontWeight: FontWeight.w500),
+          ),
           leading: CircleAvatar(
             backgroundColor: theme.primaryColor,
-            radius: 16.r,
+            radius: 18,
             child: Icon(
               iconData,
               color: Colors.white,
-              size: 16.r,
+              size: 18,
             ),
           ),
           trailing: Switch(

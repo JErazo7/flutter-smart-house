@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SmartHouseButton extends StatelessWidget {
   final double? width;
@@ -20,11 +19,11 @@ class SmartHouseButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(16),
         ),
-        fixedSize: Size(width ?? 1.sw, height ?? 40.h),
-        textStyle:
-            Theme.of(context).textTheme.subtitle1?.apply(fontSizeFactor: 1.1),
+        fixedSize:
+            Size(width ?? MediaQuery.of(context).size.width, height ?? 64),
+        textStyle: Theme.of(context).textTheme.headline6,
       ),
       onPressed: onPressed,
       child: Text(

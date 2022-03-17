@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import 'core/style/theme.dart';
 import 'routes/router.dart';
@@ -10,20 +10,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      minTextAdapt: true,
-      builder: () => MaterialApp.router(
-        builder: (context, widget) {
-          ScreenUtil.setContext(context);
-          return widget!;
-        },
-        title: 'Smart House',
-        theme: lightTheme(context),
-        routeInformationParser: router.routeInformationParser,
-        routerDelegate: router.routerDelegate,
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-      ),
+    final theme = lightTheme(context);
+    return MaterialApp.router(
+      builder: (context, widget) {
+        return ResponsiveWrapper.builder(
+          widget,
+          minWidth: 480,
+          defaultScale: true,
+          breakpoints: [
+            const ResponsiveBreakpoint.resize(480, name: MOBILE),
+            const ResponsiveBreakpoint.autoScale(800, name: TABLET),
+            const ResponsiveBreakpoint.resize(
+              1000,
+              name: DESKTOP,
+              scaleFactor: 0.8,
+            ),
+          ],
+        );
+      },
+      title: 'Smart House',
+      theme: theme,
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
     );
   }
 }

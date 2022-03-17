@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../domain/smart_item/smart_item.dart';
 
@@ -12,11 +11,11 @@ class DevicesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
-        height: 120.h,
+        height: 140,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemExtent: 170.r,
-          padding: EdgeInsets.all(8.r),
+          itemExtent: 190,
+          padding: const EdgeInsets.all(8),
           itemBuilder: (context, index) {
             final device = devices[index];
             return DeviceItem(device);
@@ -42,15 +41,15 @@ class DeviceItem extends StatelessWidget {
     );
 
     return Container(
-      // width: 160.w,
-      padding: EdgeInsets.symmetric(horizontal: 8.r),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: PhysicalModel(
         color: theme.colorScheme.secondary,
-        elevation: 2.h,
+        elevation: 2,
         shadowColor: theme.colorScheme.secondary,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: EdgeInsets.all(16.r).subtract(EdgeInsets.only(top: 8.r)),
+          padding:
+              const EdgeInsets.all(16).subtract(const EdgeInsets.only(top: 8)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,17 +60,17 @@ class DeviceItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 4.h),
+                      padding: const EdgeInsets.only(top: 4),
                       child: Icon(
                         iconData,
-                        size: 30.r,
+                        size: 32,
                       ),
                     ),
                     Text(
                       device.name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: theme.textTheme.subtitle1,
+                      style: theme.textTheme.headline6,
                     )
                   ],
                 ),

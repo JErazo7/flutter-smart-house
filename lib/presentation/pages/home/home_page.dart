@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
@@ -84,7 +83,7 @@ class HomeData extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
-          padding: EdgeInsets.all(16.r),
+          padding: const EdgeInsets.all(16),
           child: SmartHouseButton(
             text: 'Create Routine',
             onPressed: () {
@@ -113,7 +112,7 @@ class HomeError extends StatelessWidget {
             const Spacer(),
             Lottie.asset(
               LottieAnimations.loading,
-              height: 180.h,
+              height: 180,
               width: MediaQuery.of(context).size.width,
             ),
             Text(
@@ -122,7 +121,7 @@ class HomeError extends StatelessWidget {
             ),
             const Spacer(flex: 2),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: SmartHouseButton(
                 text: 'Retry',
                 onPressed: onRetry,
@@ -144,7 +143,7 @@ class HomeLoading extends StatelessWidget {
       body: Center(
         child: Lottie.asset(
           LottieAnimations.loading,
-          height: 180.h,
+          height: 180,
           width: MediaQuery.of(context).size.width,
         ),
       ),

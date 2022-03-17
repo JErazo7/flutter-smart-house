@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RoutineAppbar extends SliverPersistentHeaderDelegate {
   const RoutineAppbar({Key? key}) : super();
@@ -9,19 +8,20 @@ class RoutineAppbar extends SliverPersistentHeaderDelegate {
     final theme = Theme.of(context);
     return Container(
       color: theme.scaffoldBackgroundColor,
-      padding: EdgeInsets.all(16.r).subtract(EdgeInsets.only(bottom: 4.h)),
+      padding:
+          const EdgeInsets.all(16).subtract(const EdgeInsets.only(bottom: 8)),
       child: Text(
         'Routines',
-        style: theme.textTheme.headline6,
+        style: theme.textTheme.headline5,
       ),
     );
   }
 
   @override
-  double get maxExtent => 50.r;
+  double get maxExtent => 52;
 
   @override
-  double get minExtent => 50.r;
+  double get minExtent => 52;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
