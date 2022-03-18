@@ -18,7 +18,6 @@ class RoutineFormController extends StateNotifier<RoutineFormState> {
 
   void initialized(Routine? routine) {
     state = state.copyWith(
-      isLoading: false,
       routine: routine ?? state.routine,
       isEditing: routine != null,
     );

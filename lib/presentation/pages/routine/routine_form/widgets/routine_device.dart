@@ -1,22 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../application/routine/routine_form/routine_form_controller.dart';
-import '../../../../../application/smart_item/smart_item_provider.dart';
+import '../../../../../domain/smart_item/smart_item.dart';
 import '../../../../core/widgets/flat_smart_house_button.dart';
 import '../../../../core/widgets/smart_house_button.dart';
 
-class RoutineDevice extends StatelessWidget {
+class RoutineDevice extends StatefulWidget {
+  final String? smartItemId;
+  final bool isEditing;
+  final List<SmartItem> smartItems;
   final VoidCallback onPrevious;
-  final VoidCallback validated;
+  final VoidCallback onNext;
+  final VoidCallback onSave;
+  final void Function(String) onSelected;
 
-  RoutineDevice({
+  const RoutineDevice({
     Key? key,
     required this.onPrevious,
-    required this.validated,
+    required this.smartItems,
+    required this.onSelected,
+    required this.smartItemId,
+    required this.isEditing,
+    required this.onNext,
+    required this.onSave,
   }) : super(key: key);
 
-  final _provider = routineFormControllerProvider;
+  @override
+  State<RoutineDevice> createState() => _RoutineDeviceState();
+}
+
+class _RoutineDeviceState extends State<RoutineDevice> {
+  String? _smartItemId;
+  @override
+  void initState() {
+    _smartItemId = widget.smartItemId;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,29 +44,27 @@ class RoutineDevice extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Consumer(
-            builder: (context, ref, child) {
-              final state = ref.watch(_provider);
-
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SmartHouseButton(
-                    text: state.isEditing ? 'Save' : 'Next',
-                    onPressed:
-                        state.routine.smartItemId.isNotEmpty ? () {} : null,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SmartHouseButton(
+                text: widget.isEditing ? 'Save' : 'Next',
+                onPressed: () {
+                  if (widget.isEditing) {
+                    return widget.onSave();
+                  }
+                  widget.onNext();
+                },
+              ),
+              if (!widget.isEditing)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: FlatSmartHouseButton(
+                    text: 'Back',
+                    onPressed: widget.onPrevious,
                   ),
-                  if (!state.isEditing)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: FlatSmartHouseButton(
-                        text: 'Back',
-                        onPressed: onPrevious,
-                      ),
-                    )
-                ],
-              );
-            },
+                )
+            ],
           ),
         ),
       ),
@@ -75,36 +91,28 @@ class RoutineDevice extends StatelessWidget {
               ),
             ),
           ),
-          Consumer(
-            builder: (context, ref, child) {
-              final devices = ref.watch(smartItemsProvider);
-              final smartItemId = ref.watch(_provider).routine.smartItemId;
-
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final device = devices[index];
-                    return DeviceListItem(
-                      isSelected: device.id == smartItemId,
-                      name: device.name,
-                      iconId: device.iconId,
-                      onTap: () {
-                        onSmartItemTaped(ref, device.id);
-                      },
-                    );
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final smartItem = widget.smartItems[index];
+                return DeviceListItem(
+                  isSelected: smartItem.id == _smartItemId,
+                  name: smartItem.name,
+                  iconId: smartItem.iconId,
+                  onTap: () {
+                    widget.onSelected(smartItem.id);
+                    setState(() {
+                      _smartItemId = smartItem.id;
+                    });
                   },
-                  childCount: devices.length,
-                ),
-              );
-            },
+                );
+              },
+              childCount: widget.smartItems.length,
+            ),
           )
         ],
       ),
     );
-  }
-
-  void onSmartItemTaped(WidgetRef ref, String id) {
-    ref.read(_provider.notifier).smartItemIdUpdated(id);
   }
 }
 

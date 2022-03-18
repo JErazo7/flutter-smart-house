@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../application/routine/routine_form/routine_form_controller.dart';
+import '../../../../application/smart_item/smart_item_provider.dart';
 import '../../../../domain/routine/routine.dart';
 import '../../../core/utils/utils.dart';
 import 'widgets/routine_device.dart';
 import 'widgets/routine_name.dart';
+import 'widgets/routine_settings.dart';
 
 enum RoutineFormSection { name, device, settings }
 
@@ -27,7 +29,9 @@ class RoutineFormPage extends ConsumerStatefulWidget {
 
 class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   late final PageController _pageController;
+  late Routine _routine;
   late int pagePosition;
+
   final _provider = routineFormControllerProvider;
 
   @override
@@ -35,6 +39,7 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
     super.initState();
     final arguments = widget.arguments;
     ref.read(_provider.notifier).initialized(arguments?.routine);
+    _routine = arguments?.routine ?? Routine.empty();
     pagePosition = arguments?.sectionToEdit.index ?? 0;
     _pageController = PageController(initialPage: pagePosition);
   }
@@ -44,6 +49,8 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
     final position =
         '${(pagePosition + 1).toString()} of ${RoutineFormSection.values.length}';
 
+    final isEditing = widget.arguments != null;
+
     // listen only if the routine was sent to save and got a response
     ref.listen<bool>(
       _provider.select((value) => value.saveFailureOrSuccessOption.isSome()),
@@ -52,17 +59,16 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
       }),
     );
 
-    final isLoading = ref.watch(_provider.select((value) => value.isLoading));
-    if (isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator.adaptive()),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.close),
+        ),
         actions: [
-          if (widget.arguments == null)
+          if (!isEditing)
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -81,12 +87,41 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
         },
         children: [
           RoutineName(
-            validated: _onNextPage,
+            nameChanged: (value) {
+              ref.read(_provider.notifier).nameUpdated(value);
+            },
+            onNext: _onNextPage,
+            onSave: _saved,
+            name: _routine.name,
+            isEditing: isEditing,
           ),
-          RoutineDevice(
+          Consumer(
+            builder: (context, ref, child) {
+              final smartItems = ref.watch(smartItemsProvider);
+              return RoutineDevice(
+                isEditing: isEditing,
+                onNext: _onNextPage,
+                onPrevious: _onPreviousPage,
+                smartItems: smartItems,
+                onSave: _saved,
+                onSelected: (id) {
+                  ref.read(_provider.notifier).smartItemIdUpdated(id);
+                },
+                smartItemId: _routine.smartItemId,
+              );
+            },
+          ),
+          RoutineSettings(
+            isEditing: isEditing,
+            frequency: _routine.frequency,
+            turnOnTime: _routine.turnOnTime,
+            turnOffTime: _routine.turnOffTime,
             onPrevious: _onPreviousPage,
-            validated: () {},
-          ),
+            onSave: _saved,
+            onFrequencySelected: (value) {},
+            onturnOnTimeChoosed: (value) {},
+            onturnOffTimeChoosed: (value) {},
+          )
         ],
       ),
     );
@@ -106,9 +141,14 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
     );
   }
 
+  void _saved() {
+    ref.read(_provider.notifier).saved();
+  }
+
   void _pagePositionUpdated(int position) {
     setState(() {
       pagePosition = position;
+      _routine = ref.read(_provider).routine;
     });
   }
 

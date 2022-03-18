@@ -1,34 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../application/routine/routine_form/routine_form_controller.dart';
 import '../../../../core/widgets/smart_house_button.dart';
 
-class RoutineName extends ConsumerStatefulWidget {
-  final VoidCallback validated;
+class RoutineName extends StatefulWidget {
+  final String? name;
+  final bool isEditing;
+  final void Function(String) nameChanged;
+  final VoidCallback onNext;
+  final VoidCallback onSave;
 
   const RoutineName({
     Key? key,
-    required this.validated,
+    this.name,
+    required this.nameChanged,
+    required this.isEditing,
+    required this.onNext,
+    required this.onSave,
   }) : super(key: key);
 
   @override
-  _RoutineNameState createState() => _RoutineNameState();
+  State<RoutineName> createState() => _RoutineNameState();
 }
 
-class _RoutineNameState extends ConsumerState<RoutineName> {
+class _RoutineNameState extends State<RoutineName> {
   final _formKey = GlobalKey<FormState>();
-  late bool _isEditing;
-  late final TextEditingController _textController;
-  final _provider = routineFormControllerProvider;
-
-  @override
-  void initState() {
-    final state = ref.read(_provider);
-    _textController = TextEditingController(text: state.routine.name);
-    _isEditing = state.isEditing;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +34,14 @@ class _RoutineNameState extends ConsumerState<RoutineName> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SmartHouseButton(
-            text: _isEditing ? 'Save' : 'Next',
+            text: widget.isEditing ? 'Save' : 'Next',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                widget.validated();
+                FocusManager.instance.primaryFocus?.unfocus();
+                if (widget.isEditing) {
+                  return widget.onSave();
+                }
+                widget.onNext();
               }
             },
           ),
@@ -68,12 +67,10 @@ class _RoutineNameState extends ConsumerState<RoutineName> {
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  controller: _textController,
                   autofocus: true,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  onChanged: (value) {
-                    ref.read(_provider.notifier).nameUpdated(value);
-                  },
+                  initialValue: widget.name,
+                  onChanged: widget.nameChanged,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Enter a name';
@@ -87,11 +84,5 @@ class _RoutineNameState extends ConsumerState<RoutineName> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
   }
 }

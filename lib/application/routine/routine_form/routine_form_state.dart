@@ -6,7 +6,6 @@ class RoutineFormState with _$RoutineFormState {
     required Routine routine,
     required bool isEditing,
     required bool isSaving,
-    required bool isLoading,
     required Option<Either<RoutineFailure, Unit>> saveFailureOrSuccessOption,
   }) = _RoutineFormState;
 
@@ -15,7 +14,6 @@ class RoutineFormState with _$RoutineFormState {
       routine: Routine.empty(),
       isEditing: false,
       isSaving: false,
-      isLoading: true,
       saveFailureOrSuccessOption: none(),
     );
   }
