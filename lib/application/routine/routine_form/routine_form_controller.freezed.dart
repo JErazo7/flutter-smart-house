@@ -21,12 +21,14 @@ class _$RoutineFormStateTearOff {
       {required Routine routine,
       required bool isEditing,
       required bool isSaving,
+      required bool isLoading,
       required Option<Either<RoutineFailure, Unit>>
           saveFailureOrSuccessOption}) {
     return _RoutineFormState(
       routine: routine,
       isEditing: isEditing,
       isSaving: isSaving,
+      isLoading: isLoading,
       saveFailureOrSuccessOption: saveFailureOrSuccessOption,
     );
   }
@@ -40,6 +42,7 @@ mixin _$RoutineFormState {
   Routine get routine => throw _privateConstructorUsedError;
   bool get isEditing => throw _privateConstructorUsedError;
   bool get isSaving => throw _privateConstructorUsedError;
+  bool get isLoading => throw _privateConstructorUsedError;
   Option<Either<RoutineFailure, Unit>> get saveFailureOrSuccessOption =>
       throw _privateConstructorUsedError;
 
@@ -57,6 +60,7 @@ abstract class $RoutineFormStateCopyWith<$Res> {
       {Routine routine,
       bool isEditing,
       bool isSaving,
+      bool isLoading,
       Option<Either<RoutineFailure, Unit>> saveFailureOrSuccessOption});
 
   $RoutineCopyWith<$Res> get routine;
@@ -76,6 +80,7 @@ class _$RoutineFormStateCopyWithImpl<$Res>
     Object? routine = freezed,
     Object? isEditing = freezed,
     Object? isSaving = freezed,
+    Object? isLoading = freezed,
     Object? saveFailureOrSuccessOption = freezed,
   }) {
     return _then(_value.copyWith(
@@ -90,6 +95,10 @@ class _$RoutineFormStateCopyWithImpl<$Res>
       isSaving: isSaving == freezed
           ? _value.isSaving
           : isSaving // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoading: isLoading == freezed
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
       saveFailureOrSuccessOption: saveFailureOrSuccessOption == freezed
           ? _value.saveFailureOrSuccessOption
@@ -117,6 +126,7 @@ abstract class _$RoutineFormStateCopyWith<$Res>
       {Routine routine,
       bool isEditing,
       bool isSaving,
+      bool isLoading,
       Option<Either<RoutineFailure, Unit>> saveFailureOrSuccessOption});
 
   @override
@@ -139,6 +149,7 @@ class __$RoutineFormStateCopyWithImpl<$Res>
     Object? routine = freezed,
     Object? isEditing = freezed,
     Object? isSaving = freezed,
+    Object? isLoading = freezed,
     Object? saveFailureOrSuccessOption = freezed,
   }) {
     return _then(_RoutineFormState(
@@ -153,6 +164,10 @@ class __$RoutineFormStateCopyWithImpl<$Res>
       isSaving: isSaving == freezed
           ? _value.isSaving
           : isSaving // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoading: isLoading == freezed
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
       saveFailureOrSuccessOption: saveFailureOrSuccessOption == freezed
           ? _value.saveFailureOrSuccessOption
@@ -169,6 +184,7 @@ class _$_RoutineFormState implements _RoutineFormState {
       {required this.routine,
       required this.isEditing,
       required this.isSaving,
+      required this.isLoading,
       required this.saveFailureOrSuccessOption});
 
   @override
@@ -178,11 +194,13 @@ class _$_RoutineFormState implements _RoutineFormState {
   @override
   final bool isSaving;
   @override
+  final bool isLoading;
+  @override
   final Option<Either<RoutineFailure, Unit>> saveFailureOrSuccessOption;
 
   @override
   String toString() {
-    return 'RoutineFormState(routine: $routine, isEditing: $isEditing, isSaving: $isSaving, saveFailureOrSuccessOption: $saveFailureOrSuccessOption)';
+    return 'RoutineFormState(routine: $routine, isEditing: $isEditing, isSaving: $isSaving, isLoading: $isLoading, saveFailureOrSuccessOption: $saveFailureOrSuccessOption)';
   }
 
   @override
@@ -193,6 +211,7 @@ class _$_RoutineFormState implements _RoutineFormState {
             const DeepCollectionEquality().equals(other.routine, routine) &&
             const DeepCollectionEquality().equals(other.isEditing, isEditing) &&
             const DeepCollectionEquality().equals(other.isSaving, isSaving) &&
+            const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
             const DeepCollectionEquality().equals(
                 other.saveFailureOrSuccessOption, saveFailureOrSuccessOption));
   }
@@ -203,6 +222,7 @@ class _$_RoutineFormState implements _RoutineFormState {
       const DeepCollectionEquality().hash(routine),
       const DeepCollectionEquality().hash(isEditing),
       const DeepCollectionEquality().hash(isSaving),
+      const DeepCollectionEquality().hash(isLoading),
       const DeepCollectionEquality().hash(saveFailureOrSuccessOption));
 
   @JsonKey(ignore: true)
@@ -216,6 +236,7 @@ abstract class _RoutineFormState implements RoutineFormState {
       {required Routine routine,
       required bool isEditing,
       required bool isSaving,
+      required bool isLoading,
       required Option<Either<RoutineFailure, Unit>>
           saveFailureOrSuccessOption}) = _$_RoutineFormState;
 
@@ -225,6 +246,8 @@ abstract class _RoutineFormState implements RoutineFormState {
   bool get isEditing;
   @override
   bool get isSaving;
+  @override
+  bool get isLoading;
   @override
   Option<Either<RoutineFailure, Unit>> get saveFailureOrSuccessOption;
   @override

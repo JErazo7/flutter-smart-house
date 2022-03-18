@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../application/routine/routine_form/routine_form_controller.dart';
 import '../../../../core/widgets/smart_house_button.dart';
 
-class RoutineName extends ConsumerWidget {
-  final String? name;
-  final bool isEditing;
-  final void Function(String) onChanged;
+class RoutineName extends ConsumerStatefulWidget {
   final VoidCallback validated;
 
-  RoutineName({
+  const RoutineName({
     Key? key,
     required this.validated,
-    required this.name,
-    required this.onChanged,
-    this.isEditing = false,
   }) : super(key: key);
 
+  @override
+  _RoutineNameState createState() => _RoutineNameState();
+}
+
+class _RoutineNameState extends ConsumerState<RoutineName> {
   final _formKey = GlobalKey<FormState>();
+  late bool _isEditing;
+  late final TextEditingController _textController;
+  final _provider = routineFormControllerProvider;
 
   @override
-  Widget build(BuildContext context, ref) {
+  void initState() {
+    final state = ref.read(_provider);
+    _textController = TextEditingController(text: state.routine.name);
+    _isEditing = state.isEditing;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -28,10 +39,10 @@ class RoutineName extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SmartHouseButton(
-            text: isEditing ? 'Save' : 'Next',
+            text: _isEditing ? 'Save' : 'Next',
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                validated();
+                widget.validated();
               }
             },
           ),
@@ -57,11 +68,11 @@ class RoutineName extends ConsumerWidget {
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  initialValue: name,
+                  controller: _textController,
                   autofocus: true,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   onChanged: (value) {
-                    onChanged(value);
+                    ref.read(_provider.notifier).nameUpdated(value);
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -76,5 +87,11 @@ class RoutineName extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 }

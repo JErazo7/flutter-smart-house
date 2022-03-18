@@ -10,10 +10,10 @@ import 'widgets/routine_name.dart';
 enum RoutineFormSection { name, device, settings }
 
 class RoutineFormArguments {
-  final RoutineFormSection editSection;
+  final RoutineFormSection sectionToEdit;
   final Routine routine;
 
-  RoutineFormArguments({required this.editSection, required this.routine});
+  RoutineFormArguments({required this.sectionToEdit, required this.routine});
 }
 
 class RoutineFormPage extends ConsumerStatefulWidget {
@@ -28,15 +28,14 @@ class RoutineFormPage extends ConsumerStatefulWidget {
 class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   late final PageController _pageController;
   late int pagePosition;
-  late final AutoDisposeStateNotifierProvider<RoutineFormController,
-      RoutineFormState> _provider;
+  final _provider = routineFormControllerProvider;
 
   @override
   void initState() {
     super.initState();
     final arguments = widget.arguments;
-    _provider = routineFormControllerProvider(widget.arguments?.routine);
-    pagePosition = arguments?.editSection.index ?? 0;
+    ref.read(_provider.notifier).initialized(arguments?.routine);
+    pagePosition = arguments?.sectionToEdit.index ?? 0;
     _pageController = PageController(initialPage: pagePosition);
   }
 
@@ -44,7 +43,6 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   Widget build(BuildContext context) {
     final position =
         '${(pagePosition + 1).toString()} of ${RoutineFormSection.values.length}';
-    final routine = widget.arguments?.routine;
 
     // listen only if the routine was sent to save and got a response
     ref.listen<bool>(
@@ -54,6 +52,13 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
       }),
     );
 
+    final isLoading = ref.watch(_provider.select((value) => value.isLoading));
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator.adaptive()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -61,8 +66,10 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(position,
-                    style: Theme.of(context).textTheme.headline6),
+                child: Text(
+                  position,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
               ),
             )
         ],
@@ -75,16 +82,10 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
         children: [
           RoutineName(
             validated: _onNextPage,
-            onChanged: (value) {
-              ref.read(_provider.notifier).nameUpdated(value);
-            },
-            name: 'Josue',
-            isEditing: false,
           ),
           RoutineDevice(
             onPrevious: _onPreviousPage,
             validated: () {},
-            deviceId: routine?.smartItemId,
           ),
         ],
       ),

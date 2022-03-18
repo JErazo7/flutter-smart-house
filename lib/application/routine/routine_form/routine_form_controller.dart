@@ -13,10 +13,16 @@ part 'routine_form_controller.freezed.dart';
 
 class RoutineFormController extends StateNotifier<RoutineFormState> {
   final IRoutineRepository _repository;
-  final Routine? routine;
 
-  RoutineFormController(this._repository, this.routine)
-      : super(RoutineFormState.initial(routine));
+  RoutineFormController(this._repository) : super(RoutineFormState.initial());
+
+  void initialized(Routine? routine) {
+    state = state.copyWith(
+      isLoading: false,
+      routine: routine ?? state.routine,
+      isEditing: routine != null,
+    );
+  }
 
   void nameUpdated(String name) {
     state = state.copyWith(

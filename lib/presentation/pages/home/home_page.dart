@@ -10,7 +10,6 @@ import '../../../domain/smart_item/smart_item.dart';
 import '../../core/resources/resources.dart';
 import '../../core/widgets/smart_house_button.dart';
 import '../../routes/route_name.dart';
-import '../routine/routine_form/routine_form_page.dart';
 import 'widgets/carousel_section.dart';
 import 'widgets/devices_appbar.dart';
 import 'widgets/devices_list.dart';
@@ -22,7 +21,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final smartItemsState = ref.watch(smartItemProvider);
+    final smartItemsState = ref.watch(smartItemFutureProvider);
     final routinesState = ref.watch(routineNotifierProvider);
 
     // If there is an error, it returns a error page
@@ -47,7 +46,7 @@ class HomePage extends ConsumerWidget {
 
   void _onRetry(WidgetRef ref) {
     ref.read(routineNotifierProvider.notifier).watchAllStarted();
-    ref.refresh(smartItemProvider);
+    ref.refresh(smartItemFutureProvider);
   }
 }
 
@@ -91,8 +90,8 @@ class HomeData extends StatelessWidget {
               context.pushNamed(
                 RouteName.routineForm,
                 // extra: RoutineFormArguments(
-                //   editSection: RoutineFormSection.device,
-                //   routine: Routine.empty(),
+                //   editSection: RoutineFormSection.name,
+                //   routine: Routine.empty().copyWith(name: 'Josue'),
                 // ),
               );
             },

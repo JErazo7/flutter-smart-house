@@ -13,6 +13,7 @@ ThemeData lightTheme(BuildContext context) {
     color: AppColors.title,
   );
   return _baseTheme.copyWith(
+    highlightColor: AppColors.highlight,
     brightness: Brightness.light,
     appBarTheme: _baseTheme.appBarTheme.copyWith(
       backgroundColor: _baseTheme.scaffoldBackgroundColor,

@@ -6,5 +6,6 @@ class AppColors {
 
   static const primary = Color(0xFF6993FF);
   static const secondary = Color(0xFFF8FCFF);
+  static const highlight = Color(0xFF78C1FF);
   static const title = Color(0xFF14142B);
 }
