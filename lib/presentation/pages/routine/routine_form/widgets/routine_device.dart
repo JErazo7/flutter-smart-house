@@ -3,25 +3,22 @@ import 'package:flutter/material.dart';
 import '../../../../../domain/smart_item/smart_item.dart';
 import '../../../../core/widgets/flat_smart_house_button.dart';
 import '../../../../core/widgets/smart_house_button.dart';
+import 'routine_form_actions.dart';
 
 class RoutineDevice extends StatefulWidget {
   final String? smartItemId;
-  final bool isEditing;
+  final String buttonAction;
+  final bool showBackButton;
   final List<SmartItem> smartItems;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
-  final VoidCallback onSave;
-  final void Function(String) onSelected;
+  final void Function(String) deviceSelected;
 
   const RoutineDevice({
     Key? key,
-    required this.onPrevious,
     required this.smartItems,
-    required this.onSelected,
+    required this.deviceSelected,
     required this.smartItemId,
-    required this.isEditing,
-    required this.onNext,
-    required this.onSave,
+    required this.buttonAction,
+    required this.showBackButton,
   }) : super(key: key);
 
   @override
@@ -48,20 +45,17 @@ class _RoutineDeviceState extends State<RoutineDevice> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SmartHouseButton(
-                text: widget.isEditing ? 'Save' : 'Next',
+                text: widget.buttonAction,
                 onPressed: () {
-                  if (widget.isEditing) {
-                    return widget.onSave();
-                  }
-                  widget.onNext();
+                  RoutineFormActions.of(context).onNext();
                 },
               ),
-              if (!widget.isEditing)
+              if (widget.showBackButton)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: FlatSmartHouseButton(
                     text: 'Back',
-                    onPressed: widget.onPrevious,
+                    onPressed: RoutineFormActions.of(context).onPrevious,
                   ),
                 )
             ],
@@ -100,7 +94,7 @@ class _RoutineDeviceState extends State<RoutineDevice> {
                   name: smartItem.name,
                   iconId: smartItem.iconId,
                   onTap: () {
-                    widget.onSelected(smartItem.id);
+                    widget.deviceSelected(smartItem.id);
                     setState(() {
                       _smartItemId = smartItem.id;
                     });

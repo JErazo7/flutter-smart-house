@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/flat_smart_house_button.dart';
 import '../../../../core/widgets/smart_house_button.dart';
+import 'routine_form_actions.dart';
 
 class RoutineName extends StatefulWidget {
   final String? name;
-  final bool isEditing;
+  final String buttonAction;
+  final bool showBackButton;
+
   final void Function(String) nameChanged;
-  final VoidCallback onNext;
-  final VoidCallback onSave;
 
   const RoutineName({
     Key? key,
     this.name,
     required this.nameChanged,
-    required this.isEditing,
-    required this.onNext,
-    required this.onSave,
+    required this.buttonAction,
+    required this.showBackButton,
   }) : super(key: key);
 
   @override
@@ -33,17 +34,27 @@ class _RoutineNameState extends State<RoutineName> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: SmartHouseButton(
-            text: widget.isEditing ? 'Save' : 'Next',
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                FocusManager.instance.primaryFocus?.unfocus();
-                if (widget.isEditing) {
-                  return widget.onSave();
-                }
-                widget.onNext();
-              }
-            },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SmartHouseButton(
+                text: widget.buttonAction,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    RoutineFormActions.of(context).onNext();
+                  }
+                },
+              ),
+              if (widget.showBackButton)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: FlatSmartHouseButton(
+                    text: 'Back',
+                    onPressed: RoutineFormActions.of(context).onPrevious,
+                  ),
+                )
+            ],
           ),
         ),
       ),

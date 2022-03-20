@@ -6,6 +6,7 @@ import '../../../../application/smart_item/smart_item_provider.dart';
 import '../../../../domain/routine/routine.dart';
 import '../../../core/utils/utils.dart';
 import 'widgets/routine_device.dart';
+import 'widgets/routine_form_actions.dart';
 import 'widgets/routine_name.dart';
 import 'widgets/routine_settings.dart';
 
@@ -38,20 +39,26 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   void initState() {
     super.initState();
     final arguments = widget.arguments;
+
+    // Initialize the provider and routine of this widget
     ref.read(_provider.notifier).initialized(arguments?.routine);
     _routine = arguments?.routine ?? Routine.empty();
+
+    // Select the initial position of the pageView
     pagePosition = arguments?.sectionToEdit.index ?? 0;
     _pageController = PageController(initialPage: pagePosition);
   }
 
   @override
   Widget build(BuildContext context) {
-    final position =
-        '${(pagePosition + 1).toString()} of ${RoutineFormSection.values.length}';
+    final currentPage = pagePosition.toString();
+    final totalPages = RoutineFormSection.values.length;
+    final position = '$currentPage of $totalPages';
 
     final isEditing = widget.arguments != null;
+    final buttonActionText = isEditing ? 'Save' : 'Next';
 
-    // listen only if the routine was sent to save and got a response
+    // Listen if the routine was sent to save and got a response
     ref.listen<bool>(
       _provider.select((value) => value.saveFailureOrSuccessOption.isSome()),
       ((_, isSome) {
@@ -80,58 +87,69 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
             )
         ],
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (newPosition) {
-          _pagePositionUpdated(newPosition);
-        },
-        children: [
-          RoutineName(
-            nameChanged: (value) {
-              ref.read(_provider.notifier).nameUpdated(value);
-            },
-            onNext: _onNextPage,
-            onSave: _saved,
-            name: _routine.name,
-            isEditing: isEditing,
-          ),
-          Consumer(
-            builder: (context, ref, child) {
-              final smartItems = ref.watch(smartItemsProvider);
-              return RoutineDevice(
-                isEditing: isEditing,
-                onNext: _onNextPage,
-                onPrevious: _onPreviousPage,
-                smartItems: smartItems,
-                onSave: _saved,
-                onSelected: (id) {
-                  ref.read(_provider.notifier).smartItemIdUpdated(id);
-                },
-                smartItemId: _routine.smartItemId,
-              );
-            },
-          ),
-          RoutineSettings(
-            isEditing: isEditing,
-            frequency: _routine.frequency,
-            turnOnTime: _routine.turnOnTime,
-            turnOffTime: _routine.turnOffTime,
-            onPrevious: _onPreviousPage,
-            onSave: _saved,
-            onFrequencySelected: (value) {},
-            onturnOnTimeChoosed: (value) {},
-            onturnOffTimeChoosed: (value) {},
-          )
-        ],
+      body: RoutineFormActions(
+        onNext: _onNextPage,
+        onPrevious: _onPreviousPage,
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (newPosition) {
+            _pagePositionUpdated(newPosition);
+          },
+          children: [
+            RoutineName(
+              nameChanged: (value) {
+                ref.read(_provider.notifier).nameUpdated(value);
+              },
+              name: _routine.name,
+              showBackButton: false,
+              buttonAction: buttonActionText,
+            ),
+            Consumer(
+              builder: (context, ref, child) {
+                final smartItems = ref.watch(smartItemsProvider);
+                return RoutineDevice(
+                  showBackButton: !isEditing,
+                  buttonAction: buttonActionText,
+                  smartItems: smartItems,
+                  deviceSelected: (id) {
+                    ref.read(_provider.notifier).smartItemIdUpdated(id);
+                  },
+                  smartItemId: _routine.smartItemId,
+                );
+              },
+            ),
+            RoutineSettings(
+              buttonAction: 'Save',
+              showBackButton: !isEditing,
+              frequency: _routine.frequency,
+              turnOnTime: _routine.turnOnTime,
+              turnOffTime: _routine.turnOffTime,
+              frequencySelected: (value) {
+                ref.read(_provider.notifier).frequencyUpdated(value);
+              },
+              turnOnTimeChoosed: (value) {
+                ref.read(_provider.notifier).turnOnTimeUpdated(value);
+              },
+              turnOffTimeChoosed: (value) {
+                ref.read(_provider.notifier).turnOffTimeUpdated(value);
+              },
+            )
+          ],
+        ),
       ),
     );
   }
 
   void _onNextPage() {
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeIn,
-    );
+    final pageArrayPosition = RoutineFormSection.values.length - 1;
+    if (pagePosition == pageArrayPosition || ref.read(_provider).isEditing) {
+      ref.read(_provider.notifier).saved();
+    } else {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    }
   }
 
   void _onPreviousPage() {
@@ -141,13 +159,9 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
     );
   }
 
-  void _saved() {
-    ref.read(_provider.notifier).saved();
-  }
-
   void _pagePositionUpdated(int position) {
     setState(() {
-      pagePosition = position;
+      pagePosition = position + 1;
       _routine = ref.read(_provider).routine;
     });
   }
