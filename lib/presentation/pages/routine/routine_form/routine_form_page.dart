@@ -10,10 +10,10 @@ import 'widgets/routine_form_actions.dart';
 import 'widgets/routine_name.dart';
 import 'widgets/routine_settings.dart';
 
-enum RoutineFormSection { name, device, settings }
+enum RoutineEditSection { name, device, settings }
 
 class RoutineFormArguments {
-  final RoutineFormSection sectionToEdit;
+  final RoutineEditSection sectionToEdit;
   final Routine routine;
 
   RoutineFormArguments({required this.sectionToEdit, required this.routine});
@@ -51,8 +51,8 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentPage = pagePosition.toString();
-    final totalPages = RoutineFormSection.values.length;
+    final currentPage = (pagePosition + 1).toString();
+    final totalPages = RoutineEditSection.values.length;
     final position = '$currentPage of $totalPages';
 
     final isEditing = widget.arguments != null;
@@ -92,6 +92,7 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
         onPrevious: _onPreviousPage,
         child: PageView(
           controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
           onPageChanged: (newPosition) {
             _pagePositionUpdated(newPosition);
           },
@@ -141,7 +142,7 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   }
 
   void _onNextPage() {
-    final pageArrayPosition = RoutineFormSection.values.length - 1;
+    final pageArrayPosition = RoutineEditSection.values.length - 1;
     if (pagePosition == pageArrayPosition || ref.read(_provider).isEditing) {
       ref.read(_provider.notifier).saved();
     } else {
@@ -161,7 +162,7 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
 
   void _pagePositionUpdated(int position) {
     setState(() {
-      pagePosition = position + 1;
+      pagePosition = position;
       _routine = ref.read(_provider).routine;
     });
   }
