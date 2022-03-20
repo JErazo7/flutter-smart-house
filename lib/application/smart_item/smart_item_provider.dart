@@ -17,6 +17,7 @@ final deviceByIdProvider =
   final device = smartItems.firstWhere((element) => element.id == id);
   return device;
 });
+
 final smartItemsProvider = Provider.autoDispose<List<SmartItem>>((ref) {
   final smartItems = ref.watch(smartItemFutureProvider).asData!.value;
   return smartItems;

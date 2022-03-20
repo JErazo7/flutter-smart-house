@@ -5,6 +5,7 @@ import '../../../../application/routine/routine_form/routine_form_controller.dar
 import '../../../../application/smart_item/smart_item_provider.dart';
 import '../../../../domain/routine/routine.dart';
 import '../../../core/utils/utils.dart';
+import '../../../core/widgets/saving_in_progress_overlay.dart';
 import 'widgets/routine_device.dart';
 import 'widgets/routine_form_actions.dart';
 import 'widgets/routine_name.dart';
@@ -30,7 +31,6 @@ class RoutineFormPage extends ConsumerStatefulWidget {
 
 class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   late final PageController _pageController;
-  late Routine _routine;
   late int pagePosition;
 
   final _provider = routineFormControllerProvider;
@@ -38,11 +38,10 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   @override
   void initState() {
     super.initState();
+    // Initialize the provider and routine of this widget
     final arguments = widget.arguments;
 
-    // Initialize the provider and routine of this widget
     ref.read(_provider.notifier).initialized(arguments?.routine);
-    _routine = arguments?.routine ?? Routine.empty();
 
     // Select the initial position of the pageView
     pagePosition = arguments?.sectionToEdit.index ?? 0;
@@ -66,78 +65,69 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
       }),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: const Icon(Icons.close),
-        ),
-        actions: [
-          if (!isEditing)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  position,
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-              ),
-            )
-        ],
-      ),
-      body: RoutineFormActions(
-        onNext: _onNextPage,
-        onPrevious: _onPreviousPage,
-        child: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          onPageChanged: (newPosition) {
-            _pagePositionUpdated(newPosition);
-          },
-          children: [
-            RoutineName(
-              nameChanged: (value) {
-                ref.read(_provider.notifier).nameUpdated(value);
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
               },
-              name: _routine.name,
-              showBackButton: false,
-              buttonAction: buttonActionText,
+              icon: const Icon(Icons.close),
             ),
-            Consumer(
-              builder: (context, ref, child) {
-                final smartItems = ref.watch(smartItemsProvider);
-                return RoutineDevice(
-                  showBackButton: !isEditing,
+            actions: [
+              if (!isEditing)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      position,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  ),
+                )
+            ],
+          ),
+          body: RoutineFormActions(
+            onNext: _onNextPage,
+            onPrevious: _onPreviousPage,
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (newPosition) {
+                _pagePositionUpdated(newPosition);
+              },
+              children: [
+                RoutineName(
+                  showBackButton: false,
                   buttonAction: buttonActionText,
-                  smartItems: smartItems,
-                  deviceSelected: (id) {
-                    ref.read(_provider.notifier).smartItemIdUpdated(id);
+                ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final smartItems = ref.watch(smartItemsProvider);
+                    return RoutineDevice(
+                      showBackButton: !isEditing,
+                      buttonAction: buttonActionText,
+                      smartItems: smartItems,
+                    );
                   },
-                  smartItemId: _routine.smartItemId,
-                );
-              },
+                ),
+                RoutineSettings(
+                  buttonAction: 'Save',
+                  showBackButton: !isEditing,
+                )
+              ],
             ),
-            RoutineSettings(
-              buttonAction: 'Save',
-              showBackButton: !isEditing,
-              frequency: _routine.frequency,
-              turnOnTime: _routine.turnOnTime,
-              turnOffTime: _routine.turnOffTime,
-              frequencySelected: (value) {
-                ref.read(_provider.notifier).frequencyUpdated(value);
-              },
-              turnOnTimeChoosed: (value) {
-                ref.read(_provider.notifier).turnOnTimeUpdated(value);
-              },
-              turnOffTimeChoosed: (value) {
-                ref.read(_provider.notifier).turnOffTimeUpdated(value);
-              },
-            )
-          ],
+          ),
         ),
-      ),
+        Consumer(
+          builder: (context, ref, _) {
+            final isSaving =
+                ref.watch(_provider.select((value) => value.isSaving));
+            return SavingInProgressOverlay(isSaving: isSaving);
+          },
+        )
+      ],
     );
   }
 
@@ -163,7 +153,6 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   void _pagePositionUpdated(int position) {
     setState(() {
       pagePosition = position;
-      _routine = ref.read(_provider).routine;
     });
   }
 

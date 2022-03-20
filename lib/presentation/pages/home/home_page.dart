@@ -7,9 +7,10 @@ import '../../../application/routine/routine_watcher/routine_watcher_notifier.da
 import '../../../application/smart_item/smart_item_provider.dart';
 import '../../../domain/routine/routine.dart';
 import '../../../domain/smart_item/smart_item.dart';
-import '../../core/resources/resources.dart';
+import '../../core/utils/resources.dart';
 import '../../core/widgets/smart_house_button.dart';
 import '../../routes/route_name.dart';
+import '../routine/routine_form/routine_form_page.dart';
 import 'widgets/carousel_section.dart';
 import 'widgets/devices_appbar.dart';
 import 'widgets/devices_list.dart';
@@ -89,10 +90,10 @@ class HomeData extends StatelessWidget {
             onPressed: () {
               context.pushNamed(
                 RouteName.routineForm,
-                // extra: RoutineFormArguments(
-                //   sectionToEdit: RoutineFormSection.device,
-                //   routine: Routine.empty().copyWith(name: 'Josue'),
-                // ),
+                extra: RoutineFormArguments(
+                  sectionToEdit: RoutineEditSection.name,
+                  routine: Routine.empty().copyWith(name: 'Josue'),
+                ),
               );
             },
           ),

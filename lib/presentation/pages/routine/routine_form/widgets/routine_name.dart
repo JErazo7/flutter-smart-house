@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../application/routine/routine_form/routine_form_controller.dart';
 import '../../../../core/widgets/flat_smart_house_button.dart';
 import '../../../../core/widgets/smart_house_button.dart';
 import 'routine_form_actions.dart';
 
 class RoutineName extends StatefulWidget {
-  final String? name;
   final String buttonAction;
   final bool showBackButton;
 
-  final void Function(String) nameChanged;
-
   const RoutineName({
     Key? key,
-    this.name,
-    required this.nameChanged,
     required this.buttonAction,
     required this.showBackButton,
   }) : super(key: key);
@@ -29,6 +26,7 @@ class _RoutineNameState extends State<RoutineName> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final provider = routineFormControllerProvider;
 
     return Scaffold(
       bottomNavigationBar: SafeArea(
@@ -77,16 +75,23 @@ class _RoutineNameState extends State<RoutineName> {
               ),
               Form(
                 key: _formKey,
-                child: TextFormField(
-                  autofocus: true,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  initialValue: widget.name,
-                  onChanged: widget.nameChanged,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Enter a name';
-                    }
-                    return null;
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final name = ref.watch(
+                      provider.select((value) => value.routine.name),
+                    );
+                    return TextFormField(
+                      autofocus: true,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      initialValue: name,
+                      onChanged: ref.read(provider.notifier).nameUpdated,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter a name';
+                        }
+                        return null;
+                      },
+                    );
                   },
                 ),
               )

@@ -46,7 +46,10 @@ ThemeData lightTheme(BuildContext context) {
       headline6: theme.textTheme.headline6?.copyWith(
         fontWeight: FontWeight.w600,
       ),
-      subtitle1: theme.textTheme.subtitle1?.copyWith(fontSize: 18),
+      subtitle1: theme.textTheme.subtitle1?.copyWith(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
       bodyText1: theme.textTheme.bodyText2?.copyWith(fontSize: 16),
     ),
   );
