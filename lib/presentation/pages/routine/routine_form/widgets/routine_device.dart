@@ -1,62 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../application/routine/routine_form/routine_form_controller.dart';
 import '../../../../../domain/smart_item/smart_item.dart';
 import '../../../../core/widgets/flat_smart_house_button.dart';
 import '../../../../core/widgets/smart_house_button.dart';
-import 'routine_form_actions.dart';
+import 'routine_form_inherited.dart';
 
-class RoutineDevice extends StatelessWidget {
-  final String buttonAction;
-  final bool showBackButton;
+class RoutineDevice extends ConsumerWidget {
   final List<SmartItem> smartItems;
 
   const RoutineDevice({
     Key? key,
     required this.smartItems,
-    required this.buttonAction,
-    required this.showBackButton,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final theme = Theme.of(context);
-    final provider = routineFormControllerProvider;
+    final provider = RoutineFormInherited.of(context).provider;
+    final isEditing = ref.watch(provider.select((value) => value.isEditing));
 
     return Scaffold(
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Consumer(
-                builder: (context, ref, _) {
-                  final smartItemId = ref.watch(
-                    provider.select((value) => value.routine.smartItemId),
-                  );
-                  return SmartHouseButton(
-                    text: buttonAction,
-                    enabled: smartItemId.isNotEmpty,
-                    onPressed: () {
-                      RoutineFormActions.of(context).onNext();
-                    },
-                  );
-                },
-              ),
-              if (showBackButton)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: FlatSmartHouseButton(
-                    text: 'Back',
-                    onPressed: RoutineFormActions.of(context).onPrevious,
-                  ),
-                )
-            ],
-          ),
-        ),
-      ),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -105,6 +69,39 @@ class RoutineDevice extends StatelessWidget {
             },
           )
         ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Consumer(
+                builder: (context, ref, _) {
+                  final smartItemId = ref.watch(
+                    provider.select((value) => value.routine.smartItemId),
+                  );
+
+                  return SmartHouseButton(
+                    text: isEditing ? 'Save' : 'Next',
+                    enabled: smartItemId.isNotEmpty,
+                    onPressed: () {
+                      RoutineFormInherited.of(context).onNext();
+                    },
+                  );
+                },
+              ),
+              if (!isEditing)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: FlatSmartHouseButton(
+                    text: 'Back',
+                    onPressed: RoutineFormInherited.of(context).onPrevious,
+                  ),
+                )
+            ],
+          ),
+        ),
       ),
     );
   }

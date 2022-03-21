@@ -4,52 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../application/routine/routine_form/routine_form_controller.dart';
 import '../../../../../domain/routine/routine.dart';
 import '../../../../core/utils/extensions.dart';
 import '../../../../core/widgets/flat_smart_house_button.dart';
 import '../../../../core/widgets/smart_house_button.dart';
-import 'routine_form_actions.dart';
+import 'routine_form_inherited.dart';
 
 class RoutineSettings extends ConsumerWidget {
-  final String buttonAction;
-  final bool showBackButton;
-
   const RoutineSettings({
     Key? key,
-    required this.buttonAction,
-    required this.showBackButton,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
     final theme = Theme.of(context);
-    final provider = routineFormControllerProvider;
+    final provider = RoutineFormInherited.of(context).provider;
     final controller = ref.read(provider.notifier);
 
     return Scaffold(
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SmartHouseButton(
-                text: buttonAction,
-                onPressed: RoutineFormActions.of(context).onNext,
-              ),
-              if (showBackButton)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: FlatSmartHouseButton(
-                    text: 'Back',
-                    onPressed: RoutineFormActions.of(context).onPrevious,
-                  ),
-                )
-            ],
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -126,6 +98,35 @@ class RoutineSettings extends ConsumerWidget {
                   );
                 },
               )
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SmartHouseButton(
+                text: 'Save',
+                onPressed: RoutineFormInherited.of(context).onNext,
+              ),
+              Consumer(
+                builder: (context, ref, child) {
+                  final isEditing =
+                      ref.watch(provider.select((value) => value.isEditing));
+                  if (isEditing) return const SizedBox();
+                  return child!;
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: FlatSmartHouseButton(
+                    text: 'Back',
+                    onPressed: RoutineFormInherited.of(context).onPrevious,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

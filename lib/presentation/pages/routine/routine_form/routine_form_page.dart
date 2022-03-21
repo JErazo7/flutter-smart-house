@@ -7,7 +7,7 @@ import '../../../../domain/routine/routine.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/widgets/saving_in_progress_overlay.dart';
 import 'widgets/routine_device.dart';
-import 'widgets/routine_form_actions.dart';
+import 'widgets/routine_form_inherited.dart';
 import 'widgets/routine_name.dart';
 import 'widgets/routine_settings.dart';
 
@@ -33,33 +33,26 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   late final PageController _pageController;
   late int pagePosition;
 
-  final _provider = routineFormControllerProvider;
-
   @override
   void initState() {
-    super.initState();
-    // Initialize the provider and routine of this widget
-    final arguments = widget.arguments;
-
-    ref.read(_provider.notifier).initialized(arguments?.routine);
-
     // Select the initial position of the pageView
-    pagePosition = arguments?.sectionToEdit.index ?? 0;
+    pagePosition = widget.arguments?.sectionToEdit.index ?? 0;
     _pageController = PageController(initialPage: pagePosition);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = routineFormControllerProvider(widget.arguments?.routine);
     final currentPage = (pagePosition + 1).toString();
     final totalPages = RoutineEditSection.values.length;
     final position = '$currentPage of $totalPages';
 
     final isEditing = widget.arguments != null;
-    final buttonActionText = isEditing ? 'Save' : 'Next';
 
     // Listen if the routine was sent to save and got a response
     ref.listen<bool>(
-      _provider.select((value) => value.saveFailureOrSuccessOption.isSome()),
+      provider.select((value) => value.saveFailureOrSuccessOption.isSome()),
       ((_, isSome) {
         _handeState(context, ref, isSome);
       }),
@@ -88,7 +81,8 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
                 )
             ],
           ),
-          body: RoutineFormActions(
+          body: RoutineFormInherited(
+            provider: provider,
             onNext: _onNextPage,
             onPrevious: _onPreviousPage,
             child: PageView(
@@ -98,24 +92,16 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
                 _pagePositionUpdated(newPosition);
               },
               children: [
-                RoutineName(
-                  showBackButton: false,
-                  buttonAction: buttonActionText,
-                ),
+                const RoutineName(),
                 Consumer(
                   builder: (context, ref, child) {
                     final smartItems = ref.watch(smartItemsProvider);
                     return RoutineDevice(
-                      showBackButton: !isEditing,
-                      buttonAction: buttonActionText,
                       smartItems: smartItems,
                     );
                   },
                 ),
-                RoutineSettings(
-                  buttonAction: 'Save',
-                  showBackButton: !isEditing,
-                )
+                const RoutineSettings()
               ],
             ),
           ),
@@ -123,7 +109,7 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
         Consumer(
           builder: (context, ref, _) {
             final isSaving =
-                ref.watch(_provider.select((value) => value.isSaving));
+                ref.watch(provider.select((value) => value.isSaving));
             return SavingInProgressOverlay(isSaving: isSaving);
           },
         )
@@ -132,9 +118,10 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   }
 
   void _onNextPage() {
+    final provider = routineFormControllerProvider(widget.arguments?.routine);
     final pageArrayPosition = RoutineEditSection.values.length - 1;
-    if (pagePosition == pageArrayPosition || ref.read(_provider).isEditing) {
-      ref.read(_provider.notifier).saved();
+    if (pagePosition == pageArrayPosition || ref.read(provider).isEditing) {
+      ref.read(provider.notifier).saved();
     } else {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
@@ -162,7 +149,8 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
     bool isSome,
   ) {
     if (isSome) {
-      final state = ref.read(_provider);
+      final provider = routineFormControllerProvider(widget.arguments?.routine);
+      final state = ref.read(provider);
       state.saveFailureOrSuccessOption.fold(
         () {},
         (either) {
@@ -174,11 +162,15 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
               );
             },
             (_) {
+              Navigator.of(context).pop();
+              final msg = state.isEditing
+                  ? 'Your routine has been created'
+                  : 'Your routine has been updated';
+
               SmartHouseAlerts.showSnackBarSuccess(
                 context,
-                'Yout routine has been created',
+                msg,
               );
-              Navigator.of(context).pop();
             },
           );
         },

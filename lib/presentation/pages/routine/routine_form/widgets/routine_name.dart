@@ -1,61 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../application/routine/routine_form/routine_form_controller.dart';
-import '../../../../core/widgets/flat_smart_house_button.dart';
 import '../../../../core/widgets/smart_house_button.dart';
-import 'routine_form_actions.dart';
+import 'routine_form_inherited.dart';
 
-class RoutineName extends StatefulWidget {
-  final String buttonAction;
-  final bool showBackButton;
-
-  const RoutineName({
-    Key? key,
-    required this.buttonAction,
-    required this.showBackButton,
-  }) : super(key: key);
+class RoutineName extends ConsumerStatefulWidget {
+  const RoutineName({Key? key}) : super(key: key);
 
   @override
-  State<RoutineName> createState() => _RoutineNameState();
+  _RoutineNameState createState() => _RoutineNameState();
 }
 
-class _RoutineNameState extends State<RoutineName> {
+class _RoutineNameState extends ConsumerState<RoutineName> {
   final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      final provider = RoutineFormInherited.of(context).provider;
+      final name = ref.read(provider).routine.name;
+      _controller.text = name;
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final provider = routineFormControllerProvider;
+    final provider = RoutineFormInherited.of(context).provider;
 
     return Scaffold(
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SmartHouseButton(
-                text: widget.buttonAction,
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    RoutineFormActions.of(context).onNext();
-                  }
-                },
-              ),
-              if (widget.showBackButton)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: FlatSmartHouseButton(
-                    text: 'Back',
-                    onPressed: RoutineFormActions.of(context).onPrevious,
-                  ),
-                )
-            ],
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -75,23 +53,16 @@ class _RoutineNameState extends State<RoutineName> {
               ),
               Form(
                 key: _formKey,
-                child: Consumer(
-                  builder: (context, ref, _) {
-                    final name = ref.watch(
-                      provider.select((value) => value.routine.name),
-                    );
-                    return TextFormField(
-                      autofocus: true,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      initialValue: name,
-                      onChanged: ref.read(provider.notifier).nameUpdated,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter a name';
-                        }
-                        return null;
-                      },
-                    );
+                child: TextFormField(
+                  autofocus: true,
+                  controller: _controller,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onChanged: ref.read(provider.notifier).nameUpdated,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter a name';
+                    }
+                    return null;
                   },
                 ),
               )
@@ -99,6 +70,37 @@ class _RoutineNameState extends State<RoutineName> {
           ),
         ),
       ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Consumer(
+                builder: (context, ref, child) {
+                  final isEditing =
+                      ref.watch(provider.select((value) => value.isEditing));
+                  return SmartHouseButton(
+                    text: isEditing ? 'Save' : 'Next',
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        RoutineFormInherited.of(context).onNext();
+                      }
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

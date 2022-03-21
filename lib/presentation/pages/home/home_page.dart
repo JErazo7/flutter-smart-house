@@ -90,10 +90,10 @@ class HomeData extends StatelessWidget {
             onPressed: () {
               context.pushNamed(
                 RouteName.routineForm,
-                extra: RoutineFormArguments(
-                  sectionToEdit: RoutineEditSection.name,
-                  routine: Routine.empty().copyWith(name: 'Josue'),
-                ),
+                // extra: RoutineFormArguments(
+                //   sectionToEdit: RoutineEditSection.name,
+                //   routine: Routine.empty().copyWith(name: 'Josue'),
+                // ),
               );
             },
           ),
