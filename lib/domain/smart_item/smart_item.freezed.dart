@@ -22,7 +22,7 @@ class _$SmartItemTearOff {
       required String name,
       required SmartItemType type,
       required SmartItemState state,
-      int? iconId}) {
+      required int iconId}) {
     return _SmartItem(
       id: id,
       name: name,
@@ -51,7 +51,7 @@ mixin _$SmartItem {
   SmartItemState get state => throw _privateConstructorUsedError;
 
   /// Icon to indentify the SmartItem
-  int? get iconId => throw _privateConstructorUsedError;
+  int get iconId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SmartItemCopyWith<SmartItem> get copyWith =>
@@ -67,7 +67,7 @@ abstract class $SmartItemCopyWith<$Res> {
       String name,
       SmartItemType type,
       SmartItemState state,
-      int? iconId});
+      int iconId});
 }
 
 /// @nodoc
@@ -106,7 +106,7 @@ class _$SmartItemCopyWithImpl<$Res> implements $SmartItemCopyWith<$Res> {
       iconId: iconId == freezed
           ? _value.iconId
           : iconId // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
     ));
   }
 }
@@ -122,7 +122,7 @@ abstract class _$SmartItemCopyWith<$Res> implements $SmartItemCopyWith<$Res> {
       String name,
       SmartItemType type,
       SmartItemState state,
-      int? iconId});
+      int iconId});
 }
 
 /// @nodoc
@@ -162,7 +162,7 @@ class __$SmartItemCopyWithImpl<$Res> extends _$SmartItemCopyWithImpl<$Res>
       iconId: iconId == freezed
           ? _value.iconId
           : iconId // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
     ));
   }
 }
@@ -175,7 +175,7 @@ class _$_SmartItem implements _SmartItem {
       required this.name,
       required this.type,
       required this.state,
-      this.iconId});
+      required this.iconId});
 
   @override
 
@@ -196,7 +196,7 @@ class _$_SmartItem implements _SmartItem {
   @override
 
   /// Icon to indentify the SmartItem
-  final int? iconId;
+  final int iconId;
 
   @override
   String toString() {
@@ -236,7 +236,7 @@ abstract class _SmartItem implements SmartItem {
       required String name,
       required SmartItemType type,
       required SmartItemState state,
-      int? iconId}) = _$_SmartItem;
+      required int iconId}) = _$_SmartItem;
 
   @override
 
@@ -257,7 +257,7 @@ abstract class _SmartItem implements SmartItem {
   @override
 
   /// Icon to indentify the SmartItem
-  int? get iconId;
+  int get iconId;
   @override
   @JsonKey(ignore: true)
   _$SmartItemCopyWith<_SmartItem> get copyWith =>

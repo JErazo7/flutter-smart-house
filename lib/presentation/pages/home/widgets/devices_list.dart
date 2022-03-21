@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../domain/smart_item/smart_item.dart';
+import '../../../core/utils/utils.dart';
 
 class DevicesList extends StatelessWidget {
   final List<SmartItem> devices;
@@ -35,10 +36,7 @@ class DeviceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final iconData = IconData(
-      device.iconId ?? 61795,
-      fontFamily: 'MaterialIcons',
-    );
+    final iconData = getIconDataFromId(device.iconId);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),

@@ -1,4 +1,4 @@
-part of 'routine_eliminator_notifier.dart';
+part of 'routine_eliminator_controller.dart';
 
 @freezed
 class RoutineEliminatorState with _$RoutineEliminatorState {

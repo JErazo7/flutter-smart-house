@@ -42,7 +42,7 @@ class SmartItemDto with _$SmartItemDto {
         (element) => describeEnum(element) == state,
         orElse: () => SmartItemState.off,
       ),
-      iconId: iconId,
+      iconId: iconId ?? 61795,
     );
   }
 

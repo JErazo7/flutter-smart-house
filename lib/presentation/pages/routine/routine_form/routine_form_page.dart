@@ -6,7 +6,9 @@ import '../../../../application/smart_item/smart_item_provider.dart';
 import '../../../../domain/routine/routine.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/widgets/saving_in_progress_overlay.dart';
+import '../../../routes/route_name.dart';
 import 'widgets/routine_device.dart';
+import 'widgets/routine_form_appbar.dart';
 import 'widgets/routine_form_inherited.dart';
 import 'widgets/routine_name.dart';
 import 'widgets/routine_settings.dart';
@@ -32,6 +34,7 @@ class RoutineFormPage extends ConsumerStatefulWidget {
 class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   late final PageController _pageController;
   late int pagePosition;
+  final totalPages = RoutineEditSection.values.length;
 
   @override
   void initState() {
@@ -45,47 +48,25 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
   Widget build(BuildContext context) {
     final provider = routineFormControllerProvider(widget.arguments?.routine);
     final currentPage = (pagePosition + 1).toString();
-    final totalPages = RoutineEditSection.values.length;
     final position = '$currentPage of $totalPages';
-
-    final isEditing = widget.arguments != null;
 
     // Listen if the routine was sent to save and got a response
     ref.listen<bool>(
       provider.select((value) => value.saveFailureOrSuccessOption.isSome()),
       ((_, isSome) {
-        _handeState(context, ref, isSome);
+        _handleState(context, ref, isSome);
       }),
     );
 
     return Stack(
       children: [
-        Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            ),
-            actions: [
-              if (!isEditing)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      position,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                  ),
-                )
-            ],
-          ),
-          body: RoutineFormInherited(
-            provider: provider,
-            onNext: _onNextPage,
-            onPrevious: _onPreviousPage,
-            child: PageView(
+        RoutineFormInherited(
+          provider: provider,
+          onNext: _onNextPage,
+          onPrevious: _onPreviousPage,
+          child: Scaffold(
+            appBar: RoutineFormAppbar(position: position),
+            body: PageView(
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
               onPageChanged: (newPosition) {
@@ -143,7 +124,7 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
     });
   }
 
-  void _handeState(
+  void _handleState(
     BuildContext context,
     WidgetRef ref,
     bool isSome,
@@ -162,15 +143,13 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
               );
             },
             (_) {
-              Navigator.of(context).pop();
-              final msg = state.isEditing
+              Navigator.of(context)
+                  .popUntil((route) => route.settings.name == RouteName.home);
+              final msg = !state.isEditing
                   ? 'Your routine has been created'
                   : 'Your routine has been updated';
 
-              SmartHouseAlerts.showSnackBarSuccess(
-                context,
-                msg,
-              );
+              SmartHouseAlerts.showSnackBarSuccess(context, msg);
             },
           );
         },

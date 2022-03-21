@@ -19,7 +19,7 @@ class SmartItem with _$SmartItem {
     required SmartItemState state,
 
     /// Icon to indentify the SmartItem
-    int? iconId,
+    required int iconId,
   }) = _SmartItem;
 
   /// Create an empty object with the basic data of a [SmartItem]
@@ -27,6 +27,7 @@ class SmartItem with _$SmartItem {
     return SmartItem(
       id: const Uuid().v1(),
       name: '',
+      iconId: 61795,
       type: SmartItemType.device,
       state: SmartItemState.off,
     );
