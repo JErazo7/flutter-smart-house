@@ -1,6 +1,8 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_weather_bg_null_safety/flutter_weather_bg.dart';
+import 'package:lottie/lottie.dart';
+
+import '../../../core/utils/resources.dart';
 
 class CarouselSection extends StatelessWidget {
   const CarouselSection({Key? key}) : super(key: key);
@@ -24,21 +26,23 @@ class CarouselSection extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   children: [
                     WeatherWidget(
-                      value: '8°',
-                      city: 'Buenos Aires',
-                      description: 'Thunderstorm',
-                      type: WeatherType.thunder,
+                      value: '0°',
+                      city: 'New York',
+                      description: 'Snowing',
+                      background: Colors.blue,
+                      animationPath: LottieAnimations.heavySnow,
                       height: constraints.maxHeight,
                       width: constraints.maxWidth,
                     ),
                     WeatherWidget(
-                      value: '0°',
-                      city: 'New York',
-                      description: 'Snowing',
-                      type: WeatherType.heavySnow,
+                      value: '8°',
+                      city: 'Buenos Aires',
+                      description: 'Thunderstorm',
+                      background: Colors.black,
+                      animationPath: LottieAnimations.stormshowersday,
                       height: constraints.maxHeight,
                       width: constraints.maxWidth,
-                    )
+                    ),
                   ],
                   pagination: const SwiperPagination(
                     builder: SwiperPagination.dots,
@@ -59,7 +63,8 @@ class WeatherWidget extends StatelessWidget {
   final String description;
   final double width;
   final double height;
-  final WeatherType type;
+  final String animationPath;
+  final Color background;
 
   const WeatherWidget({
     Key? key,
@@ -67,8 +72,9 @@ class WeatherWidget extends StatelessWidget {
     required this.height,
     required this.city,
     required this.value,
-    required this.type,
+    required this.animationPath,
     required this.description,
+    required this.background,
   }) : super(key: key);
 
   @override
@@ -77,13 +83,17 @@ class WeatherWidget extends StatelessWidget {
 
     return Stack(
       children: [
-        // WeatherBg(
-        //   weatherType: type,
-        //   width: width,
-        //   height: height,
-        // ),
         Container(
-          color: Colors.black,
+          color: background.withOpacity(0.8),
+        ),
+        Positioned(
+          top: 60,
+          left: 80,
+          child: Lottie.asset(
+            animationPath,
+            height: 100,
+            width: MediaQuery.of(context).size.width,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(16),

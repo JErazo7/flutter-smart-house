@@ -13,6 +13,30 @@ class RotuinesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    if (routines.isEmpty) {
+      return SliverToBoxAdapter(
+        child: SizedBox(
+          height: 160,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Icon(
+                Icons.pending_actions,
+                size: 52,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  'There is not routines yet',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {

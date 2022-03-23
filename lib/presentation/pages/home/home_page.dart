@@ -87,13 +87,7 @@ class HomeData extends StatelessWidget {
           child: SmartHouseButton(
             text: 'Create Routine',
             onPressed: () {
-              context.pushNamed(
-                RouteName.routineForm,
-                // extra: RoutineFormArguments(
-                //   sectionToEdit: RoutineEditSection.name,
-                //   routine: Routine.empty().copyWith(name: 'Josue'),
-                // ),
-              );
+              context.pushNamed(RouteName.routineForm);
             },
           ),
         ),
