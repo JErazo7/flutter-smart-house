@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../core/utils/resources.dart';
 
@@ -9,47 +10,47 @@ class CarouselSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: PhysicalModel(
-          color: Colors.transparent,
-          clipBehavior: Clip.hardEdge,
-          borderRadius: BorderRadius.circular(16),
-          child: SizedBox(
-            height: 200,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Swiper.children(
-                  autoplay: true,
-                  autoplayDelay: 5000,
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    WeatherWidget(
-                      value: '0°',
-                      city: 'New York',
-                      description: 'Snowing',
-                      background: Colors.blue,
-                      animationPath: LottieAnimations.heavySnow,
-                      height: constraints.maxHeight,
-                      width: constraints.maxWidth,
-                    ),
-                    WeatherWidget(
-                      value: '8°',
-                      city: 'Buenos Aires',
-                      description: 'Thunderstorm',
-                      background: Colors.black,
-                      animationPath: LottieAnimations.stormshowersday,
-                      height: constraints.maxHeight,
-                      width: constraints.maxWidth,
-                    ),
-                  ],
-                  pagination: const SwiperPagination(
-                    builder: SwiperPagination.dots,
+    final responsive = ResponsiveWrapper.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: PhysicalModel(
+        color: Colors.transparent,
+        clipBehavior: Clip.hardEdge,
+        borderRadius: BorderRadius.circular(16),
+        child: SizedBox(
+          height: responsive.isDesktop ? null : 200,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Swiper.children(
+                autoplay: true,
+                autoplayDelay: 5000,
+                scrollDirection: Axis.vertical,
+                children: [
+                  WeatherWidget(
+                    value: '0°',
+                    city: 'New York',
+                    description: 'Snowing',
+                    background: Colors.blue,
+                    animationPath: LottieAnimations.heavySnow,
+                    height: constraints.maxHeight,
+                    width: constraints.maxWidth,
                   ),
-                );
-              },
-            ),
+                  WeatherWidget(
+                    value: '8°',
+                    city: 'Buenos Aires',
+                    description: 'Thunderstorm',
+                    background: Colors.black,
+                    animationPath: LottieAnimations.stormshowersday,
+                    height: constraints.maxHeight,
+                    width: constraints.maxWidth,
+                  ),
+                ],
+                pagination: const SwiperPagination(
+                  builder: SwiperPagination.dots,
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -80,21 +81,31 @@ class WeatherWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final responsive = ResponsiveWrapper.of(context);
 
     return Stack(
       children: [
         Container(
           color: background.withOpacity(0.8),
         ),
-        Positioned(
-          top: 60,
-          left: 80,
-          child: Lottie.asset(
-            animationPath,
-            height: 100,
-            width: MediaQuery.of(context).size.width,
+        if (responsive.isDesktop)
+          Center(
+            child: Lottie.asset(
+              animationPath,
+              height: 300,
+              width: 300,
+            ),
+          )
+        else
+          Positioned(
+            top: 60,
+            left: 80,
+            child: Lottie.asset(
+              animationPath,
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+            ),
           ),
-        ),
         Padding(
           padding: const EdgeInsets.all(16),
           child: Column(

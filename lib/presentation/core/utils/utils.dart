@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
 
 void showModal({
   required BuildContext context,
@@ -7,36 +8,65 @@ void showModal({
   bool enableDrag = true,
   Clip? clipBehavior,
 }) {
-  final maxHeight =
-      MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
-  showModalBottomSheet(
-    context: context,
-    clipBehavior: clipBehavior,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(32),
-      ),
-    ),
-    constraints: BoxConstraints(
-      maxHeight: maxHeight,
-      minWidth: MediaQuery.of(context).size.width,
-    ),
-    enableDrag: enableDrag,
-    isScrollControlled: true,
-    builder: (context) {
-      return Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: child,
+  final responsive = ResponsiveWrapper.of(context);
+
+  if (responsive.isDesktop) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
+          title: Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(Icons.close),
             ),
           ),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          content: SizedBox(
+            width: 600,
+            child: child,
+          ),
+        );
+      },
+    );
+  } else {
+    final maxHeight =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
+    showModalBottomSheet(
+      context: context,
+      clipBehavior: clipBehavior,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(32),
         ),
-      );
-    },
-  );
+      ),
+      constraints: BoxConstraints(
+        maxHeight: maxHeight,
+        maxWidth: responsive.isDesktop
+            ? MediaQuery.of(context).size.width / 2
+            : double.infinity,
+      ),
+      enableDrag: enableDrag,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: child,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class SmartHouseAlerts {

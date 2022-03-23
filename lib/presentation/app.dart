@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
             const ResponsiveBreakpoint.resize(
               1000,
               name: DESKTOP,
-              scaleFactor: 0.8,
+              scaleFactor: 0.9,
             ),
           ],
         );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../application/routine/routine_watcher/routine_watcher_notifier.dart';
 import '../../../application/smart_item/smart_item_provider.dart';
@@ -61,14 +62,44 @@ class HomeData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveWrapper.of(context);
+    if (responsive.isDesktop) {
+      return HomeDataDesktop(
+        routines: routines,
+        smartItems: smartItems,
+      );
+    }
+    return HomeDataMobileTablet(
+      routines: routines,
+      smartItems: smartItems,
+    );
+  }
+}
+
+class HomeDataMobileTablet extends StatelessWidget {
+  final List<Routine> routines;
+  final List<SmartItem> smartItems;
+
+  const HomeDataMobileTablet({
+    Key? key,
+    required this.routines,
+    required this.smartItems,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final responsive = ResponsiveWrapper.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            const SliverAppBar(
-              title: Text('Hi Josue'),
-            ),
-            const CarouselSection(),
+            if (!responsive.isDesktop)
+              const SliverAppBar(
+                title: Text('Hi Josue'),
+              ),
+            if (!responsive.isDesktop)
+              const SliverToBoxAdapter(child: CarouselSection()),
             const DevicesAppBar(),
             DevicesList(smartItems),
             const SliverPersistentHeader(
@@ -81,6 +112,8 @@ class HomeData extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
+        elevation: responsive.isDesktop ? 0 : null,
+        color: responsive.isDesktop ? Colors.transparent : null,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: SmartHouseButton(
@@ -91,6 +124,50 @@ class HomeData extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class HomeDataDesktop extends StatelessWidget {
+  final List<Routine> routines;
+  final List<SmartItem> smartItems;
+
+  const HomeDataDesktop({
+    Key? key,
+    required this.routines,
+    required this.smartItems,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Scaffold(
+              body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Text(
+                    'Hola Josue',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ),
+                const Expanded(child: CarouselSection()),
+              ],
+            ),
+          )),
+        ),
+        Expanded(
+          child: HomeDataMobileTablet(
+            routines: routines,
+            smartItems: smartItems,
+          ),
+        )
+      ],
     );
   }
 }

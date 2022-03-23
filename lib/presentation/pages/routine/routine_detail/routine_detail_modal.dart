@@ -51,89 +51,91 @@ class RoutineDetailModal extends ConsumerWidget {
       }),
     );
 
-    return Stack(
-      children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              backgroundColor: theme.primaryColor,
-              radius: 36,
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: 36,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  routine.name,
-                  style: theme.textTheme.headline5,
+    return Material(
+      child: Stack(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                backgroundColor: theme.primaryColor,
+                radius: 36,
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 36,
                 ),
-                const SizedBox(width: 12),
-                InkWell(
-                  onTap: () {
-                    _editRoutine(context, section: RoutineEditSection.name);
-                  },
-                  child: const Icon(
-                    Icons.edit,
-                    color: Colors.blueGrey,
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    routine.name,
+                    style: theme.textTheme.headline5,
                   ),
-                )
-              ],
-            ),
-            const Divider(thickness: 2, height: 32),
-            RoutineSettingItem(
-              property: 'Smart Item',
-              value: smartItemName,
-              onEdit: () {
-                _editRoutine(context, section: RoutineEditSection.device);
-              },
-            ),
-            RoutineSettingItem(
-              property: 'Turn on',
-              value: getFormattedTime(context, routine.turnOnTime),
-              onEdit: () {
-                _editRoutine(context, section: RoutineEditSection.settings);
-              },
-            ),
-            RoutineSettingItem(
-              property: 'Turn off',
-              value: getFormattedTime(context, routine.turnOffTime),
-              onEdit: () {
-                _editRoutine(context, section: RoutineEditSection.settings);
-              },
-            ),
-            RoutineSettingItem(
-              property: 'Frequency',
-              value: describeEnum(routine.frequency),
-              onEdit: () {
-                _editRoutine(context, section: RoutineEditSection.settings);
-              },
-            ),
-            const SizedBox(height: 32),
-            SmartHouseButton(
-              text: 'Delete',
-              onPressed: () {
-                ref.read(provider.notifier).deleted(routine.id);
-              },
-            )
-          ],
-        ),
-        Consumer(
-          builder: (context, ref, _) {
-            final state = ref.watch(provider);
-            final bool isDeleting = state is ActionInProgress;
+                  const SizedBox(width: 12),
+                  InkWell(
+                    onTap: () {
+                      _editRoutine(context, section: RoutineEditSection.name);
+                    },
+                    child: const Icon(
+                      Icons.edit,
+                      color: Colors.blueGrey,
+                    ),
+                  )
+                ],
+              ),
+              const Divider(thickness: 2, height: 32),
+              RoutineSettingItem(
+                property: 'Smart Item',
+                value: smartItemName,
+                onEdit: () {
+                  _editRoutine(context, section: RoutineEditSection.device);
+                },
+              ),
+              RoutineSettingItem(
+                property: 'Turn on',
+                value: getFormattedTime(context, routine.turnOnTime),
+                onEdit: () {
+                  _editRoutine(context, section: RoutineEditSection.settings);
+                },
+              ),
+              RoutineSettingItem(
+                property: 'Turn off',
+                value: getFormattedTime(context, routine.turnOffTime),
+                onEdit: () {
+                  _editRoutine(context, section: RoutineEditSection.settings);
+                },
+              ),
+              RoutineSettingItem(
+                property: 'Frequency',
+                value: describeEnum(routine.frequency),
+                onEdit: () {
+                  _editRoutine(context, section: RoutineEditSection.settings);
+                },
+              ),
+              const SizedBox(height: 32),
+              SmartHouseButton(
+                text: 'Delete',
+                onPressed: () {
+                  ref.read(provider.notifier).deleted(routine.id);
+                },
+              )
+            ],
+          ),
+          Consumer(
+            builder: (context, ref, _) {
+              final state = ref.watch(provider);
+              final bool isDeleting = state is ActionInProgress;
 
-            return ModalSavingProgressOverlay(
-              isSaving: isDeleting,
-            );
-          },
-        )
-      ],
+              return ModalSavingProgressOverlay(
+                isSaving: isDeleting,
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 
