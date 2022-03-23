@@ -53,6 +53,7 @@ class SmartHouseAlerts {
       key: const Key('snack_bar_error'),
       backgroundColor: theme.errorColor,
       duration: duration,
+      behavior: SnackBarBehavior.floating,
       content: Text(
         message,
         style: TextStyle(
@@ -70,6 +71,7 @@ class SmartHouseAlerts {
     final snackBar = SnackBar(
       key: const Key('snack_bar_success'),
       backgroundColor: theme.primaryColor,
+      behavior: SnackBarBehavior.floating,
       content: Text(
         message,
         style: TextStyle(

@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../application/routine/routine_eliminator/routine_eliminator_controller.dart';
 import '../../../../domain/routine/routine.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/widgets/smart_house_button.dart';
@@ -24,7 +26,7 @@ void showRoutineDetailModal(
   );
 }
 
-class RoutineDetailModal extends StatelessWidget {
+class RoutineDetailModal extends ConsumerWidget {
   final Routine routine;
   final int inconId;
   final String smartItemName;
@@ -37,9 +39,17 @@ class RoutineDetailModal extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final theme = Theme.of(context);
     final icon = getIconDataFromId(inconId);
+    final provider = routineEliminatorControllerProvider;
+
+    ref.listen<RoutineEliminatorState>(
+      provider,
+      ((_, state) {
+        _handleState(context, ref, state);
+      }),
+    );
 
     return Stack(
       children: [
@@ -107,11 +117,22 @@ class RoutineDetailModal extends StatelessWidget {
             const SizedBox(height: 32),
             SmartHouseButton(
               text: 'Delete',
-              onPressed: () {},
+              onPressed: () {
+                ref.read(provider.notifier).deleted(routine.id);
+              },
             )
           ],
         ),
-        const ModalSavingProgressOverlay(isSaving: false)
+        Consumer(
+          builder: (context, ref, _) {
+            final state = ref.watch(provider);
+            final bool isDeleting = state is ActionInProgress;
+
+            return ModalSavingProgressOverlay(
+              isSaving: isDeleting,
+            );
+          },
+        )
       ],
     );
   }
@@ -126,6 +147,30 @@ class RoutineDetailModal extends StatelessWidget {
         sectionToEdit: section,
         routine: routine,
       ),
+    );
+  }
+
+  void _handleState(
+    BuildContext context,
+    WidgetRef ref,
+    RoutineEliminatorState state,
+  ) {
+    state.maybeWhen(
+      deleteFailure: (_) {
+        Navigator.pop(context);
+        SmartHouseAlerts.showSnackBarError(
+          context,
+          'An unexpected error has occurred',
+        );
+      },
+      deleteSuccess: () {
+        Navigator.pop(context);
+        SmartHouseAlerts.showSnackBarSuccess(
+          context,
+          'Your routine has been deleted',
+        );
+      },
+      orElse: () {},
     );
   }
 }
