@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'colors.dart';
 
-final _baseTheme = ThemeData(
-  primaryColor: AppColors.primary,
-);
-
 ThemeData lightTheme(BuildContext context) {
+  final _baseTheme = ThemeData(
+    primaryColor: AppColors.primary,
+  );
   final theme = Theme.of(context);
   final headLine4 = theme.textTheme.headline4?.copyWith(
     fontWeight: FontWeight.w600,

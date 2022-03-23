@@ -23,7 +23,6 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final smartItemsState = ref.watch(smartItemFutureProvider);
     final routinesState = ref.watch(routineNotifierProvider);
-
     // If there is an error, it returns a error page
     if (smartItemsState is AsyncError || routinesState is Error) {
       return HomeError(
