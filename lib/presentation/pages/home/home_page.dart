@@ -9,8 +9,10 @@ import '../../../application/smart_item/smart_item_provider.dart';
 import '../../../domain/routine/routine.dart';
 import '../../../domain/smart_item/smart_item.dart';
 import '../../core/utils/resources.dart';
+import '../../core/utils/utils.dart';
 import '../../core/widgets/smart_house_button.dart';
 import '../../routes/route_name.dart';
+import '../routine/routine_form/routine_form_page.dart';
 import 'widgets/carousel_section.dart';
 import 'widgets/devices_appbar.dart';
 import 'widgets/devices_list.dart';
@@ -95,8 +97,11 @@ class HomeDataMobileTablet extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             if (!responsive.isDesktop)
-              const SliverAppBar(
-                title: Text('Hi Josue'),
+              const SliverPadding(
+                padding: EdgeInsets.only(top: 16),
+                sliver: SliverAppBar(
+                  title: Text('Hi Josue'),
+                ),
               ),
             if (!responsive.isDesktop)
               const SliverToBoxAdapter(child: CarouselSection()),
@@ -119,7 +124,14 @@ class HomeDataMobileTablet extends StatelessWidget {
           child: SmartHouseButton(
             text: 'Create Routine',
             onPressed: () {
-              context.pushNamed(RouteName.routineForm);
+              if (responsive.isDesktop) {
+                showModal(
+                  context: context,
+                  child: const RoutineFormPage(),
+                );
+              } else {
+                context.pushNamed(RouteName.routineForm);
+              }
             },
           ),
         ),
@@ -140,34 +152,39 @@ class HomeDataDesktop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Scaffold(
-              body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Text(
-                    'Hola Josue',
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      padding: const EdgeInsets.all(32.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Material(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Text(
+                        'Hola Josue',
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                    ),
+                    const Expanded(child: CarouselSection()),
+                  ],
                 ),
-                const Expanded(child: CarouselSection()),
-              ],
+              ),
             ),
-          )),
-        ),
-        Expanded(
-          child: HomeDataMobileTablet(
-            routines: routines,
-            smartItems: smartItems,
           ),
-        )
-      ],
+          Expanded(
+            child: HomeDataMobileTablet(
+              routines: routines,
+              smartItems: smartItems,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

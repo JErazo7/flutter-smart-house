@@ -11,10 +11,12 @@ class RoutineFormAppbar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final provider = RoutineFormInherited.of(context).provider;
     return AppBar(
+      leadingWidth: 80,
       leading: IconButton(
         onPressed: () {
           Navigator.of(context).pop();
         },
+        splashRadius: 0.1,
         icon: const Icon(Icons.close),
       ),
       actions: [
@@ -27,7 +29,7 @@ class RoutineFormAppbar extends StatelessWidget implements PreferredSizeWidget {
           },
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Text(
                 position,
                 style: Theme.of(context).textTheme.headline6,

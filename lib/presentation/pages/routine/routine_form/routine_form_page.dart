@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../../application/routine/routine_form/routine_form_controller.dart';
 import '../../../../application/smart_item/smart_item_provider.dart';
@@ -46,6 +47,8 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveWrapper.of(context);
+
     final provider = routineFormControllerProvider(widget.arguments?.routine);
     final currentPage = (pagePosition + 1).toString();
     final position = '$currentPage of $totalPages';
@@ -64,26 +67,31 @@ class _RoutineFormPageState extends ConsumerState<RoutineFormPage> {
           provider: provider,
           onNext: _onNextPage,
           onPrevious: _onPreviousPage,
-          child: Scaffold(
-            appBar: RoutineFormAppbar(position: position),
-            body: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              onPageChanged: (newPosition) {
-                _pagePositionUpdated(newPosition);
-              },
-              children: [
-                const RoutineName(),
-                Consumer(
-                  builder: (context, ref, child) {
-                    final smartItems = ref.watch(smartItemsProvider);
-                    return RoutineDevice(
-                      smartItems: smartItems,
-                    );
-                  },
-                ),
-                const RoutineSettings()
-              ],
+          child: Padding(
+            padding: responsive.isDesktop
+                ? const EdgeInsets.symmetric(vertical: 16)
+                : EdgeInsets.zero,
+            child: Scaffold(
+              appBar: RoutineFormAppbar(position: position),
+              body: PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                onPageChanged: (newPosition) {
+                  _pagePositionUpdated(newPosition);
+                },
+                children: [
+                  const RoutineName(),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final smartItems = ref.watch(smartItemsProvider);
+                      return RoutineDevice(
+                        smartItems: smartItems,
+                      );
+                    },
+                  ),
+                  const RoutineSettings()
+                ],
+              ),
             ),
           ),
         ),

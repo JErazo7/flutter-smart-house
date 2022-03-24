@@ -34,7 +34,7 @@ class SmartHouseListTile extends StatelessWidget {
           child: ListTile(
             selected: isSelected,
             contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
             title: Text(
               title,
               style: theme.textTheme.headline6

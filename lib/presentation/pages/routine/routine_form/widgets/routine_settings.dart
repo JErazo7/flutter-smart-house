@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../../../domain/routine/routine.dart';
 import '../../../../core/utils/extensions.dart';
@@ -24,7 +25,7 @@ class RoutineSettings extends ConsumerWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -39,7 +40,7 @@ class RoutineSettings extends ConsumerWidget {
                   style: theme.textTheme.bodyText1,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Text(
@@ -72,7 +73,7 @@ class RoutineSettings extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
               Consumer(
                 builder: (context, ref, _) {
                   final turnOnTime = ref.watch(
@@ -85,7 +86,7 @@ class RoutineSettings extends ConsumerWidget {
                   );
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 32),
               Consumer(
                 builder: (context, ref, _) {
                   final turnOffTime = ref.watch(
@@ -104,7 +105,7 @@ class RoutineSettings extends ConsumerWidget {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -153,6 +154,7 @@ class TimeSelector extends StatelessWidget {
 
     final languageCode = Localizations.localeOf(context).languageCode;
     final formatedTime = DateFormat.jm(languageCode).format(time);
+    final responsive = ResponsiveWrapper.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,6 +183,15 @@ class TimeSelector extends StatelessWidget {
                     final dateTime = DateTime.now().fromTimeOfDay(time);
                     onChanged(dateTime);
                   },
+                  dialogInsetPadding: responsive.isDesktop
+                      ? const EdgeInsets.symmetric(
+                          horizontal: 40.0 * 14,
+                          vertical: 24.0 * 14,
+                        )
+                      : const EdgeInsets.symmetric(
+                          horizontal: 40.0,
+                          vertical: 24.0,
+                        ),
                   okStyle: theme.textTheme.headline6!
                       .copyWith(color: theme.primaryColor),
                   cancelStyle: theme.textTheme.headline6!,

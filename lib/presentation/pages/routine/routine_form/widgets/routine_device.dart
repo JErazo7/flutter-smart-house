@@ -26,7 +26,8 @@ class RoutineDevice extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -53,15 +54,18 @@ class RoutineDevice extends ConsumerWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final smartItem = smartItems[index];
-                    return SmartHouseListTile(
-                      isSelected: smartItem.id == smartItemId,
-                      title: smartItem.name,
-                      iconId: smartItem.iconId,
-                      onTap: () {
-                        ref
-                            .read(provider.notifier)
-                            .smartItemIdUpdated(smartItem.id);
-                      },
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SmartHouseListTile(
+                        isSelected: smartItem.id == smartItemId,
+                        title: smartItem.name,
+                        iconId: smartItem.iconId,
+                        onTap: () {
+                          ref
+                              .read(provider.notifier)
+                              .smartItemIdUpdated(smartItem.id);
+                        },
+                      ),
                     );
                   },
                   childCount: smartItems.length,
@@ -73,7 +77,7 @@ class RoutineDevice extends ConsumerWidget {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

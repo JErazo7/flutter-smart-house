@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../../application/routine/routine_eliminator/routine_eliminator_controller.dart';
 import '../../../../domain/routine/routine.dart';
@@ -54,75 +55,78 @@ class RoutineDetailModal extends ConsumerWidget {
     return Material(
       child: Stack(
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircleAvatar(
-                backgroundColor: theme.primaryColor,
-                radius: 36,
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 36,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    routine.name,
-                    style: theme.textTheme.headline5,
+          Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  backgroundColor: theme.primaryColor,
+                  radius: 36,
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 36,
                   ),
-                  const SizedBox(width: 12),
-                  InkWell(
-                    onTap: () {
-                      _editRoutine(context, section: RoutineEditSection.name);
-                    },
-                    child: const Icon(
-                      Icons.edit,
-                      color: Colors.blueGrey,
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      routine.name,
+                      style: theme.textTheme.headline5,
                     ),
-                  )
-                ],
-              ),
-              const Divider(thickness: 2, height: 32),
-              RoutineSettingItem(
-                property: 'Smart Item',
-                value: smartItemName,
-                onEdit: () {
-                  _editRoutine(context, section: RoutineEditSection.device);
-                },
-              ),
-              RoutineSettingItem(
-                property: 'Turn on',
-                value: getFormattedTime(context, routine.turnOnTime),
-                onEdit: () {
-                  _editRoutine(context, section: RoutineEditSection.settings);
-                },
-              ),
-              RoutineSettingItem(
-                property: 'Turn off',
-                value: getFormattedTime(context, routine.turnOffTime),
-                onEdit: () {
-                  _editRoutine(context, section: RoutineEditSection.settings);
-                },
-              ),
-              RoutineSettingItem(
-                property: 'Frequency',
-                value: describeEnum(routine.frequency),
-                onEdit: () {
-                  _editRoutine(context, section: RoutineEditSection.settings);
-                },
-              ),
-              const SizedBox(height: 32),
-              SmartHouseButton(
-                text: 'Delete',
-                onPressed: () {
-                  ref.read(provider.notifier).deleted(routine.id);
-                },
-              )
-            ],
+                    const SizedBox(width: 12),
+                    InkWell(
+                      onTap: () {
+                        _editRoutine(context, section: RoutineEditSection.name);
+                      },
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.blueGrey,
+                      ),
+                    )
+                  ],
+                ),
+                const Divider(thickness: 2, height: 32),
+                RoutineSettingItem(
+                  property: 'Smart Item',
+                  value: smartItemName,
+                  onEdit: () {
+                    _editRoutine(context, section: RoutineEditSection.device);
+                  },
+                ),
+                RoutineSettingItem(
+                  property: 'Turn on',
+                  value: getFormattedTime(context, routine.turnOnTime),
+                  onEdit: () {
+                    _editRoutine(context, section: RoutineEditSection.settings);
+                  },
+                ),
+                RoutineSettingItem(
+                  property: 'Turn off',
+                  value: getFormattedTime(context, routine.turnOffTime),
+                  onEdit: () {
+                    _editRoutine(context, section: RoutineEditSection.settings);
+                  },
+                ),
+                RoutineSettingItem(
+                  property: 'Frequency',
+                  value: describeEnum(routine.frequency),
+                  onEdit: () {
+                    _editRoutine(context, section: RoutineEditSection.settings);
+                  },
+                ),
+                const SizedBox(height: 32),
+                SmartHouseButton(
+                  text: 'Delete',
+                  onPressed: () {
+                    ref.read(provider.notifier).deleted(routine.id);
+                  },
+                )
+              ],
+            ),
           ),
           Consumer(
             builder: (context, ref, _) {
@@ -133,6 +137,14 @@ class RoutineDetailModal extends ConsumerWidget {
                 isSaving: isDeleting,
               );
             },
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            padding: const EdgeInsets.all(32),
+            splashRadius: 0.1,
+            icon: const Icon(Icons.close),
           )
         ],
       ),
@@ -143,13 +155,22 @@ class RoutineDetailModal extends ConsumerWidget {
     BuildContext context, {
     required RoutineEditSection section,
   }) {
-    GoRouter.of(context).pushNamed(
-      RouteName.routineForm,
-      extra: RoutineFormArguments(
-        sectionToEdit: section,
-        routine: routine,
-      ),
+    final responsive = ResponsiveWrapper.of(context);
+    final arguments = RoutineFormArguments(
+      sectionToEdit: section,
+      routine: routine,
     );
+    if (responsive.isDesktop) {
+      showModal(
+        context: context,
+        child: RoutineFormPage(arguments: arguments),
+      );
+    } else {
+      GoRouter.of(context).pushNamed(
+        RouteName.routineForm,
+        extra: arguments,
+      );
+    }
   }
 
   void _handleState(

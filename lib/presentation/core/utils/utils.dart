@@ -5,8 +5,6 @@ import 'package:responsive_framework/responsive_wrapper.dart';
 void showModal({
   required BuildContext context,
   required Widget child,
-  bool enableDrag = true,
-  Clip? clipBehavior,
 }) {
   final responsive = ResponsiveWrapper.of(context);
 
@@ -18,13 +16,8 @@ void showModal({
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
           ),
-          title: Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(Icons.close),
-            ),
-          ),
+          clipBehavior: Clip.hardEdge,
+          contentPadding: EdgeInsets.zero,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           content: SizedBox(
             width: 600,
@@ -38,10 +31,10 @@ void showModal({
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     showModalBottomSheet(
       context: context,
-      clipBehavior: clipBehavior,
+      clipBehavior: Clip.hardEdge,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(32),
+          top: Radius.circular(16),
         ),
       ),
       constraints: BoxConstraints(
@@ -50,17 +43,14 @@ void showModal({
             ? MediaQuery.of(context).size.width / 2
             : double.infinity,
       ),
-      enableDrag: enableDrag,
+      enableDrag: true,
       isScrollControlled: true,
       builder: (context) {
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
           child: SafeArea(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: child,
-              ),
+              child: child,
             ),
           ),
         );
@@ -100,7 +90,7 @@ class SmartHouseAlerts {
     final theme = Theme.of(context);
     final snackBar = SnackBar(
       key: const Key('snack_bar_success'),
-      backgroundColor: theme.primaryColor,
+      backgroundColor: Colors.green,
       behavior: SnackBarBehavior.floating,
       content: Text(
         message,
