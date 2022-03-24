@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
           defaultScale: true,
           breakpoints: [
             const ResponsiveBreakpoint.resize(480, name: MOBILE),
-            const ResponsiveBreakpoint.autoScale(800, name: TABLET),
+            const ResponsiveBreakpoint.autoScale(600, name: TABLET),
             const ResponsiveBreakpoint.resize(
-              1000,
+              800,
               name: DESKTOP,
               scaleFactor: 0.9,
             ),
@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
       },
       title: 'Smart House',
       theme: theme,
+      debugShowCheckedModeBanner: false,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
       supportedLocales: AppLocalizations.supportedLocales,
