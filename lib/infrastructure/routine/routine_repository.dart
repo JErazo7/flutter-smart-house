@@ -10,12 +10,13 @@ import '../core/firebase_services.dart';
 import '../core/firestore_helpers.dart';
 import 'routine_dto.dart';
 
-final routineRepositoryProvider = Provider.autoDispose((ref) {
+final routineRepositoryProvider =
+    Provider.autoDispose<IRoutineRepository>((ref) {
   final firestore = ref.watch(firestoreProvider);
   return RoutineRepository(firestore);
 });
 
-class RoutineRepository extends IRoutineRepository {
+class RoutineRepository implements IRoutineRepository {
   final FirebaseFirestore _firestore;
 
   RoutineRepository(this._firestore);
