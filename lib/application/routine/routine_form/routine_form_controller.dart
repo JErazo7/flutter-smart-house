@@ -15,7 +15,7 @@ class RoutineFormController extends StateNotifier<RoutineFormState> {
   final IRoutineRepository _repository;
 
   RoutineFormController(this._repository, Routine? routine)
-      : super(RoutineFormState.initial(routine));
+      : super(RoutineFormState.initial(routine: routine));
 
   void nameUpdated(String name) {
     state = state.copyWith(
